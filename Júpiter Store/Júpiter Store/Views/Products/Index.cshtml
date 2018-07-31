@@ -8,17 +8,17 @@
 
 @if (Model.Any())
 {
-    <div class="row">
+    <div id="products" class="row">
         @foreach (var product in Model)
          {
-             <div class="col-12 col-md-4">
+             <div class="product col-12 col-md-4" data-product-id="@product.Id" >
                  <div class="card">
                      <img class="card-img-top" src="@Url.Content(product.ImagePath)" alt="@product.Name">
                      <div class="card-body">
                          <h5 class="card-title">@product.Name</h5>
                          <p class="card-text">@product.Description</p>
                          <p class="card-text">@product.GetPrice()</p>
-                         <a href="#" class="btn btn-primary">Comprar</a>
+                         <button class="buy-product btn btn-primary @(User.Identity.IsAuthenticated ? "" : "disabled")">Comprar</button>
                      </div>
                  </div>
              </div>
@@ -30,4 +30,24 @@ else
     <div>
         Nenhum produto cadastrado.
     </div>
+}
+
+@section scripts
+{
+    <script>
+        $("#products").on("click", ".buy-product", function () {
+            var $product = $(this).parents(".product");
+
+            $.ajax({
+                url: "/api/cart/" + $product.attr("data-product-id"),
+                method: "POST",
+                success: function() {
+                    toastr.success("Produto adicionado");
+                },
+                error: function() {
+                    toastr.error("Erro ao adicionar ao carrinho");
+                }
+            });
+        });
+    </script>
 }

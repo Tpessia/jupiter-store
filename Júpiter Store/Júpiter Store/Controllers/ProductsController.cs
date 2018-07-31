@@ -58,27 +58,29 @@ namespace Júpiter_Store.Controllers
             if (!ModelState.IsValid)
                 return View("ProcuctForm", product);
 
-            if (imageFile != null)
-            {
-                var path = Path.Combine(@"~\Images", product.Name + "_" + product.Id + Path.GetExtension(imageFile.FileName));
-
-                imageFile.SaveAs(Server.MapPath(path));
-
-                product.ImagePath = path;
-            }
-
             // New Product
             if (product.Id == 0)
             {
                 product.DateAdded = DateTime.Now;
 
-                _context.Products.Add(product);
+                var newProduct = _context.Products.Add(product);
+
+                if (imageFile != null)
+                {
+                    newProduct.ImagePath = SaveProductImage(newProduct, imageFile);
+                }
+
                 _context.SaveChanges();
 
                 return Redirect("Index");
             }
-            
+
             // Edit Product
+            if (imageFile != null)
+            {
+                product.ImagePath = SaveProductImage(product, imageFile);
+            }
+
             var productInDb = _context.Products.Single(p => p.Id == product.Id);
 
             productInDb.Name = product.Name;
@@ -90,6 +92,15 @@ namespace Júpiter_Store.Controllers
             _context.SaveChanges();
 
             return Redirect("Index");
+        }
+
+        public string SaveProductImage(Product product, HttpPostedFileBase imageFile)
+        {
+            var path = Path.Combine(@"~\Images", product.Name.Replace(" ", "_") + "_" + product.Id + Path.GetExtension(imageFile.FileName));
+
+            imageFile.SaveAs(Server.MapPath(path));
+
+            return path;
         }
 
         // GET: Products/CheckOut

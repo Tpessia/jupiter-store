@@ -1,5 +1,5 @@
 ﻿body {
-    padding-top: 70px;
+    padding-top: 90px;
     padding-bottom: 20px;
 }
 
@@ -21,4 +21,17 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+#cart-container .cart-products {
+    padding: 0;
+}
+
+#cart-container .cart-products .cart-product {
+    height: 75px;
+}
+
+#cart-container .cart-products .cart-product .product-image,
+#cart-container .cart-products .cart-product .product-image img {
+    height: 100%;
 }

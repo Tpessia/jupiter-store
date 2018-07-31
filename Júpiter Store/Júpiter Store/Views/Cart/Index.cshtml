@@ -1,7 +1,53 @@
-﻿@model dynamic
+﻿@model Júpiter_Store.ViewModels.CartViewModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Carrinho";
 }
 
-<h2>title</h2>
+<h2>@ViewBag.Title</h2>
+
+@if (Model != null && Model.Products.Any())
+{
+    <div id="cart-container" class="row">
+        <div class="col-12">
+            <ul class="cart-products" class="list-group list-group-flush">
+                @foreach (var product in Model.Products)
+                {
+                    <li class="cart-product list-group-item d-flex justify-content-between align-items-center">
+                        <span class="product-image"><img src="@Url.Content(product.ImagePath)"/></span>
+                        <span class="product-name">@product.Name</span>
+                        <span class="product-quantity">@product.Quantity</span>
+                    </li>
+                }
+            </ul>
+            <div class="float-right">
+                <button id="submit-order" class="btn btn-primary">Finalizar</button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div>
+        Nenhum produto no carrinho.
+    </div>
+}
+
+@section scripts
+{
+    <script>
+        $("#submit-order").on("click", function () {
+            $.ajax({
+                url: "/api/cart/order",
+                method: "POST",
+                success: function () {
+                    $("#cart-container .cart-products").html('');
+                    toastr.success("Pedido enviado");
+                },
+                error: function() {
+                    toastr.error("Erro ao enviar o pedido");
+                }
+            });
+        });
+    </script>
+}

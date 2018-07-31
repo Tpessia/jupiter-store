@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using Júpiter_Store.Dtos;
 using Júpiter_Store.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -44,13 +45,17 @@ namespace Júpiter_Store.Controllers.Api
             if (cart == null)
                 return NotFound();
 
-            return Ok(cart);
+            return Ok(new CartDto(cart));
         }
 
         // POST: Api/Cart
         [HttpPost]
-        public IHttpActionResult AddProduct(int id)
+        public IHttpActionResult AddProduct(int id, int? quantity = 1)
         {
+            if (quantity < 1)
+                return BadRequest("Invalid quantity. Should be an integer higher than 0.");
+
+
             var userId = User.Identity.GetUserId();
 
             if (userId == null)
@@ -68,7 +73,7 @@ namespace Júpiter_Store.Controllers.Api
 
             if (cart.Products.Any(p => p.ProductId == id)) // Increment Product
             {
-                cart.Products.Single(p => p.ProductId == id).Quantity++;
+                cart.Products.Single(p => p.ProductId == id).Quantity += quantity.GetValueOrDefault();
             }
             else // New Product
             {
@@ -93,8 +98,12 @@ namespace Júpiter_Store.Controllers.Api
 
         // DELETE: Api/Cart/1
         [HttpDelete]
-        public IHttpActionResult RemoveItem(int id)
+        public IHttpActionResult RemoveItem(int id, int? quantity = 1)
         {
+            if (quantity < 1)
+                return BadRequest("Invalid quantity. Should be an integer higher than 0.");
+
+
             var userId = User.Identity.GetUserId();
 
             if (userId == null)
@@ -115,13 +124,17 @@ namespace Júpiter_Store.Controllers.Api
             if (productCart == null)
                 return NotFound();
 
-            if (productCart.Quantity > 1) // Has More Items
+            if (productCart.Quantity > quantity) // Has More Items
             {
-                productCart.Quantity--;
+                productCart.Quantity -= quantity.GetValueOrDefault();
             }
-            else // Last Item
+            else if (productCart.Quantity == quantity) // Last Item
             {
                 cart.Products.Remove(productCart);
+            }
+            else
+            {
+                return BadRequest("Invalid quantity. Subtraction would result in a negative number.");
             }
 
 
@@ -142,12 +155,21 @@ namespace Júpiter_Store.Controllers.Api
 
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products)
+                .Include(u => u.Cart.Products.Select(p => p.Product))
                 .SingleOrDefault(u => u.Id == userId)
                 ?.Cart;
 
             if (cart == null)
                 return NotFound();
+
+
+            foreach (var cartProduct in cart.Products)
+            {
+                if (cartProduct.Quantity > cartProduct.Product.NumberInStock)
+                    return BadRequest($"Quantidade no carrinho é maior do que o estoque ({cartProduct.Product.Name})");
+
+                cartProduct.Product.NumberInStock -= cartProduct.Quantity;
+            }
 
 
             cart.Products.Clear();
