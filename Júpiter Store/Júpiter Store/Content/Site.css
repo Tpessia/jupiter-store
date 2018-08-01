@@ -35,3 +35,11 @@ textarea {
 #cart-container .cart-products .cart-product .product-image img {
     height: 100%;
 }
+
+#cart-container .cart-products .cart-product .product-quantity .quantity-arrows svg {
+    cursor: pointer;
+}
+
+#cart-container .cart-products .cart-product .product-quantity .quantity-arrows .quantity-arrow-up {
+    height: 15px;
+}

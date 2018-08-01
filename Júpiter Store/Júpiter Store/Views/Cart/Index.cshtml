@@ -10,18 +10,28 @@
 {
     <div id="cart-container" class="row">
         <div class="col-12">
-            <ul class="cart-products" class="list-group list-group-flush">
+            <ul class="cart-products list-group list-group-flush">
                 @foreach (var product in Model.Products)
                 {
-                    <li class="cart-product list-group-item d-flex justify-content-between align-items-center">
+                    <li id="@product.Id" class="cart-product list-group-item d-flex justify-content-between align-items-center">
                         <span class="product-image"><img src="@Url.Content(product.ImagePath)"/></span>
                         <span class="product-name">@product.Name</span>
-                        <span class="product-quantity">@product.Quantity</span>
+                        <span class="product-price">@product.GetPrice()</span>
+                        <span class="product-quantity d-flex align-items-center">
+                            <span class="quantity-value pr-2">@product.Quantity</span>
+                            <span class="quantity-arrows d-flex flex-column">
+                                <span class="quantity-arrow-up"><svg height="10" width="10" class="up"><polygon points="0,10 5,0 10,10" style="fill: rgb(0, 0, 0);"></polygon></svg></span>
+                                <span class="quantity-arrow-down"><svg height="10" width="10" class="down"><polygon points="0,0 10,0 5,10" style="fill: rgb(0, 0, 0);"></polygon></svg></span>
+                            </span>
+                        </span>
                     </li>
                 }
             </ul>
+            <div id="total-price" class="text-right py-2">
+                Total: R$ <span id="total-price-value">@Model.FinalPrice</span>
+            </div>
             <div class="float-right">
-                <button id="submit-order" class="btn btn-primary">Finalizar</button>
+                <button id="submit-order" class="btn btn-primary mt-2">Finalizar</button>
             </div>
         </div>
     </div>
@@ -41,7 +51,9 @@ else
                 url: "/api/cart/order",
                 method: "POST",
                 success: function () {
-                    $("#cart-container .cart-products").html('');
+                    $("#cart-container")
+                        .after("<div>Nenhum produto no carrinho.</div>")
+                        .remove('');
                     toastr.success("Pedido enviado");
                 },
                 error: function() {
@@ -49,5 +61,59 @@ else
                 }
             });
         });
+
+        $(".quantity-arrow-up").on("click", function () {
+            var $product = $(this).parents(".cart-product");
+
+            $.ajax({
+                url: "/api/cart/" + $product.attr("id"),
+                method: "POST",
+                success: function () {
+                    var $qnt = $product.find(".quantity-value");
+
+                    $qnt.html(parseInt($qnt.html()) + 1);
+
+                    calculateTotalPrice();
+                },
+                error: function () {
+                    toastr.error("Erro ao alterar número de produtos");
+                }
+            });
+        });
+
+        $(".quantity-arrow-down").on("click", function () {
+            var $product = $(this).parents(".cart-product");
+
+            $.ajax({
+                url: "/api/cart/" + $product.attr("id"),
+                method: "DELETE",
+                success: function () {
+                    var $qnt = $product.find(".quantity-value");
+
+                    $qnt.html(parseInt($qnt.html()) - 1);
+
+                    calculateTotalPrice();
+                },
+                error: function () {
+                    toastr.error("Erro ao alterar número de produtos");
+                }
+            });
+        });
+
+        function calculateTotalPrice() {
+            var totalPrice = 0;
+
+            $(".cart-products .cart-product").each(function() {
+                var price = parseFloat($(this).find(".product-price").html()
+                    .replace(",", ".")
+                    .split(" ")[1]);
+
+                var quantity = $(this).find(".product-quantity .quantity-value").html();
+
+                totalPrice += price * quantity;
+            });
+
+            $("#total-price-value").html(totalPrice.toFixed(2).replace(/0$/, ""));
+        }
     </script>
 }

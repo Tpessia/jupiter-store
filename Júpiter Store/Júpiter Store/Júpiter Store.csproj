@@ -360,7 +360,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Images\" />
-    <Folder Include="Views\Customer\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

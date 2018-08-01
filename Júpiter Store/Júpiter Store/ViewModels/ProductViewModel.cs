@@ -14,11 +14,11 @@ namespace Júpiter_Store.ViewModels
         public string ImagePath { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
-
         public double TotalPrice
         {
             get { return Price * Quantity; }
         }
+
 
         public ProductViewModel(ProductCart productCart)
         {
@@ -28,6 +28,17 @@ namespace Júpiter_Store.ViewModels
             ImagePath = productCart.Product.ImagePath;
             Price = productCart.Product.Price;
             Quantity = productCart.Quantity;
+        }
+
+
+        public string GetPrice()
+        {
+            return $"R$ {Price}";
+        }
+
+        public string GetTotalPrice()
+        {
+            return $"R$ {TotalPrice}";
         }
     }
 }

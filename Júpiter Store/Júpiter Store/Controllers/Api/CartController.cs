@@ -159,7 +159,7 @@ namespace Júpiter_Store.Controllers.Api
                 .SingleOrDefault(u => u.Id == userId)
                 ?.Cart;
 
-            if (cart == null)
+            if (cart == null || !cart.Products.Any())
                 return NotFound();
 
 

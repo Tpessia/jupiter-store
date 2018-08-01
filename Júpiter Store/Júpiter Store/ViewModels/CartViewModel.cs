@@ -9,7 +9,24 @@ namespace Júpiter_Store.ViewModels
     public class CartViewModel
     {
         public int Id { get; set; }
+
         public List<ProductViewModel> Products { get; set; }
+
+        public double FinalPrice
+        {
+            get
+            {
+                double finalPrice = 0;
+
+                foreach (var product in Products)
+                {
+                    finalPrice += product.Price * product.Quantity;
+                }
+
+                return finalPrice;
+            }
+        }
+
 
         public CartViewModel(Cart cart)
         {

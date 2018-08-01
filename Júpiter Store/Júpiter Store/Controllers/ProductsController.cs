@@ -85,8 +85,8 @@ namespace Júpiter_Store.Controllers
 
             productInDb.Name = product.Name;
             productInDb.Description = product.Description;
-            productInDb.ImagePath = product.ImagePath;
-            productInDb.NumberInStock = productInDb.NumberInStock;
+            productInDb.ImagePath = product.ImagePath ?? productInDb.ImagePath;
+            productInDb.NumberInStock = product.NumberInStock;
             productInDb.Price = product.Price;
 
             _context.SaveChanges();
