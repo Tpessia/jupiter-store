@@ -12,7 +12,7 @@ namespace Júpiter_Store.Models
     public class ApplicationUser : IdentityUser
     {
         [Required]
-        public Cart Cart { get; set; }
+        public ICollection<Cart> Carts { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

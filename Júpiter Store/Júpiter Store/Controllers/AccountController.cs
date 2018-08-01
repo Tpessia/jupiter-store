@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -155,7 +156,13 @@ namespace Júpiter_Store.Controllers
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    Cart = new Cart()
+                    Carts = new List<Cart>()
+                    {
+                        new Cart()
+                        {
+                            IsActive = true
+                        }
+                    }
                 };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

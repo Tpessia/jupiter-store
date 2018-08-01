@@ -7,13 +7,13 @@ namespace Júpiter_Store.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddPurchaseHistoryToUser : IMigrationMetadata
+    public sealed partial class UpdateCartToICollectionOnUser : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddPurchaseHistoryToUser));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(UpdateCartToICollectionOnUser));
         
         string IMigrationMetadata.Id
         {
-            get { return "201808011446403_AddPurchaseHistoryToUser"; }
+            get { return "201808011609306_UpdateCartToICollectionOnUser"; }
         }
         
         string IMigrationMetadata.Source

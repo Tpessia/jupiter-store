@@ -38,9 +38,9 @@ namespace Júpiter_Store.Controllers.Api
 
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products.Select(p => p.Product))
-                .SingleOrDefault(u => u.Id == userId)
-                ?.Cart;
+                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                .Single(u => u.Id == userId)
+                ?.Carts.SingleOrDefault(c => c.IsActive);
 
             if (cart == null)
                 return NotFound();
@@ -63,9 +63,9 @@ namespace Júpiter_Store.Controllers.Api
 
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products.Select(p => p.Product))
-                .SingleOrDefault(u => u.Id == userId)
-                ?.Cart;
+                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                .Single(u => u.Id == userId)
+                ?.Carts.SingleOrDefault(c => c.IsActive);
 
             if (cart == null)
                 return NotFound();
@@ -115,9 +115,9 @@ namespace Júpiter_Store.Controllers.Api
 
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products.Select(p => p.Product))
-                .SingleOrDefault(u => u.Id == userId)
-                ?.Cart;
+                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                .Single(u => u.Id == userId)
+                ?.Carts.SingleOrDefault(c => c.IsActive);
 
             if (cart == null)
                 return NotFound();
@@ -163,9 +163,9 @@ namespace Júpiter_Store.Controllers.Api
 
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products.Select(p => p.Product))
-                .SingleOrDefault(u => u.Id == userId)
-                ?.Cart;
+                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                .Single(u => u.Id == userId)
+                ?.Carts.SingleOrDefault(c => c.IsActive);
 
             if (cart == null || !cart.Products.Any())
                 return NotFound();
@@ -180,7 +180,15 @@ namespace Júpiter_Store.Controllers.Api
             }
 
 
-            cart.Products.Clear();
+            cart.IsActive = false;
+            _context.Users
+                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                .Single(u => u.Id == userId)
+                .Carts.Add(new Cart
+                {
+                    IsActive = true
+                });
+
             _context.SaveChanges();
 
             return Ok();

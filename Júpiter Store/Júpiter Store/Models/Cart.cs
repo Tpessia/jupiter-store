@@ -12,6 +12,8 @@ namespace Júpiter_Store.Models
         
         public ICollection<ProductCart> Products { get; set; }
 
+        public bool IsActive { get; set; }
+
         public double FinalPrice
         {
             get

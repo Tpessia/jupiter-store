@@ -32,9 +32,9 @@ namespace Júpiter_Store.Controllers
             var userId = User.Identity.GetUserId();
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products.Select(p => p.Product))
+                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
                 .SingleOrDefault(u => u.Id == userId)
-                ?.Cart;
+                ?.Carts.SingleOrDefault(c => c.IsActive);
 
             return View(new CartViewModel(cart));
         }

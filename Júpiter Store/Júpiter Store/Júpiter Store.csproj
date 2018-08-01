@@ -233,9 +233,9 @@
     <Compile Include="Migrations\201807311302124_PopulateProducts.Designer.cs">
       <DependentUpon>201807311302124_PopulateProducts.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808011446403_AddPurchaseHistoryToUser.cs" />
-    <Compile Include="Migrations\201808011446403_AddPurchaseHistoryToUser.Designer.cs">
-      <DependentUpon>201808011446403_AddPurchaseHistoryToUser.cs</DependentUpon>
+    <Compile Include="Migrations\201808011609306_UpdateCartToICollectionOnUser.cs" />
+    <Compile Include="Migrations\201808011609306_UpdateCartToICollectionOnUser.Designer.cs">
+      <DependentUpon>201808011609306_UpdateCartToICollectionOnUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -382,8 +382,8 @@
     <EmbeddedResource Include="Migrations\201807311302124_PopulateProducts.resx">
       <DependentUpon>201807311302124_PopulateProducts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808011446403_AddPurchaseHistoryToUser.resx">
-      <DependentUpon>201808011446403_AddPurchaseHistoryToUser.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808011609306_UpdateCartToICollectionOnUser.resx">
+      <DependentUpon>201808011609306_UpdateCartToICollectionOnUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
