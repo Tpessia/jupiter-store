@@ -9,7 +9,7 @@
 @if (Model != null && Model.Products.Any())
 {
     <div id="cart-container" class="row">
-        <div class="col-12">
+        <form id="cart-form" class="col-12" onsubmit="return false;">
             <ul class="cart-products list-group list-group-flush">
                 @foreach (var product in Model.Products)
                 {
@@ -20,8 +20,8 @@
                         <span class="product-quantity d-flex align-items-center">
                             <span class="quantity-value pr-2">@product.Quantity</span>
                             <span class="quantity-arrows d-flex flex-column">
-                                <span class="quantity-arrow-up"><svg height="10" width="10" class="up"><polygon points="0,10 5,0 10,10" style="fill: rgb(0, 0, 0);"></polygon></svg></span>
-                                <span class="quantity-arrow-down"><svg height="10" width="10" class="down"><polygon points="0,0 10,0 5,10" style="fill: rgb(0, 0, 0);"></polygon></svg></span>
+                                <button type="button" class="quantity-arrow-up btn btn-flat"><svg height="10" width="10" class="up"><polygon points="0,10 5,0 10,10" style="fill: rgb(0, 0, 0);"></polygon></svg></button>
+                                <button type="button" class="quantity-arrow-down btn btn-flat"><svg height="10" width="10" class="down"><polygon points="0,0 10,0 5,10" style="fill: rgb(0, 0, 0);"></polygon></svg></button>
                             </span>
                         </span>
                     </li>
@@ -31,9 +31,9 @@
                 Total: R$ <span id="total-price-value">@Model.FinalPrice</span>
             </div>
             <div class="float-right">
-                <button id="submit-order" class="btn btn-primary mt-2">Finalizar</button>
+                <button type="submit" id="submit-order" class="btn btn-primary mt-2">Finalizar</button>
             </div>
-        </div>
+        </form>
     </div>
 }
 else
@@ -46,34 +46,14 @@ else
 @section scripts
 {
     <script>
-        $("#submit-order").on("click", function () {
-            $.ajax({
-                url: "/api/cart/order",
-                method: "POST",
-                success: function () {
-                    $("#cart-container")
-                        .after("<div>Nenhum produto no carrinho.</div>")
-                        .remove('');
-                    toastr.success("Pedido enviado");
-                },
-                error: function() {
-                    toastr.error("Erro ao enviar o pedido");
-                }
-            });
-        });
-
         $(".quantity-arrow-up").on("click", function () {
             var $product = $(this).parents(".cart-product");
 
             $.ajax({
                 url: "/api/cart/" + $product.attr("id"),
                 method: "POST",
-                success: function () {
-                    var $qnt = $product.find(".quantity-value");
-
-                    $qnt.html(parseInt($qnt.html()) + 1);
-
-                    calculateTotalPrice();
+                success: function (data) {
+                    updateProductChange($product, data);
                 },
                 error: function () {
                     toastr.error("Erro ao alterar número de produtos");
@@ -87,12 +67,8 @@ else
             $.ajax({
                 url: "/api/cart/" + $product.attr("id"),
                 method: "DELETE",
-                success: function () {
-                    var $qnt = $product.find(".quantity-value");
-
-                    $qnt.html(parseInt($qnt.html()) - 1);
-
-                    calculateTotalPrice();
+                success: function (data) {
+                    updateProductChange($product, data);
                 },
                 error: function () {
                     toastr.error("Erro ao alterar número de produtos");
@@ -100,20 +76,27 @@ else
             });
         });
 
-        function calculateTotalPrice() {
-            var totalPrice = 0;
+        function updateProductChange($product, data) {
+            var $qnt = $product.find(".quantity-value");
 
-            $(".cart-products .cart-product").each(function() {
-                var price = parseFloat($(this).find(".product-price").html()
-                    .replace(",", ".")
-                    .split(" ")[1]);
+            $qnt.html(data.productQuantity);
 
-                var quantity = $(this).find(".product-quantity .quantity-value").html();
-
-                totalPrice += price * quantity;
-            });
-
-            $("#total-price-value").html(totalPrice.toFixed(2).replace(/0$/, ""));
+            $("#total-price-value").html(data.cartFinalPrice);
         }
+
+
+
+        $("#cart-form").on("submit", function () {
+            $.ajax({
+                url: "/api/cart/order",
+                method: "POST",
+                success: function () {
+                    window.location.reload(true);
+                },
+                error: function () {
+                    toastr.error("Erro ao enviar o pedido");
+                }
+            });
+        });
     </script>
 }

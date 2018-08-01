@@ -63,7 +63,7 @@ namespace Júpiter_Store.Controllers.Api
 
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products)
+                .Include(u => u.Cart.Products.Select(p => p.Product))
                 .SingleOrDefault(u => u.Id == userId)
                 ?.Cart;
 
@@ -71,9 +71,11 @@ namespace Júpiter_Store.Controllers.Api
                 return NotFound();
 
 
+            int newQuantity;
+
             if (cart.Products.Any(p => p.ProductId == id)) // Increment Product
             {
-                cart.Products.Single(p => p.ProductId == id).Quantity += quantity.GetValueOrDefault();
+                newQuantity = cart.Products.Single(p => p.ProductId == id).Quantity += quantity.GetValueOrDefault();
             }
             else // New Product
             {
@@ -88,12 +90,14 @@ namespace Júpiter_Store.Controllers.Api
                     Cart = cart,
                     Quantity = 1
                 });
+
+                newQuantity = 1;
             }
 
             
             _context.SaveChanges();
 
-            return Ok();
+            return Ok(new CartAndProductDataDto { CartFinalPrice = cart.FinalPrice, ProductQuantity = newQuantity });
         }
 
         // DELETE: Api/Cart/1
@@ -111,13 +115,15 @@ namespace Júpiter_Store.Controllers.Api
 
 
             var cart = _context.Users
-                .Include(u => u.Cart.Products)
+                .Include(u => u.Cart.Products.Select(p => p.Product))
                 .SingleOrDefault(u => u.Id == userId)
                 ?.Cart;
 
             if (cart == null)
                 return NotFound();
 
+
+            int newQuantity;
 
             var productCart = cart.Products.SingleOrDefault(p => p.ProductId == id);
 
@@ -126,11 +132,13 @@ namespace Júpiter_Store.Controllers.Api
 
             if (productCart.Quantity > quantity) // Has More Items
             {
-                productCart.Quantity -= quantity.GetValueOrDefault();
+                newQuantity = productCart.Quantity -= quantity.GetValueOrDefault();
             }
             else if (productCart.Quantity == quantity) // Last Item
             {
                 cart.Products.Remove(productCart);
+
+                newQuantity = 0;
             }
             else
             {
@@ -140,7 +148,7 @@ namespace Júpiter_Store.Controllers.Api
 
             _context.SaveChanges();
 
-            return Ok();
+            return Ok(new CartAndProductDataDto { CartFinalPrice = cart.FinalPrice, ProductQuantity = newQuantity });
         }
 
         // POST: Api/Cart/Order

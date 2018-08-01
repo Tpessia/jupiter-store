@@ -43,3 +43,15 @@ textarea {
 #cart-container .cart-products .cart-product .product-quantity .quantity-arrows .quantity-arrow-up {
     height: 15px;
 }
+
+
+
+.btn.btn-flat {
+    background-color: transparent;
+    background-image: none;
+    border-color: transparent;
+}
+
+.btn.btn-flat:focus {
+    box-shadow: none;
+}

@@ -11,7 +11,7 @@
     <div id="products" class="row">
         @foreach (var product in Model)
          {
-             <div class="product col-12 col-md-4" data-product-id="@product.Id" >
+             <div class="product col-12 col-md-4 my-2" data-product-id="@product.Id" >
                  <div class="card">
                      <img class="card-img-top" src="@Url.Content(product.ImagePath)" alt="@product.Name">
                      <div class="card-body">
