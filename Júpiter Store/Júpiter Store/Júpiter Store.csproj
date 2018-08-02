@@ -242,6 +242,14 @@
     <Compile Include="Migrations\201808012330572_AddPurchaseDateToCart.Designer.cs">
       <DependentUpon>201808012330572_AddPurchaseDateToCart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808021157189_ChangeProductImagesLocation.cs" />
+    <Compile Include="Migrations\201808021157189_ChangeProductImagesLocation.Designer.cs">
+      <DependentUpon>201808021157189_ChangeProductImagesLocation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808021226300_SeedUsers.cs" />
+    <Compile Include="Migrations\201808021226300_SeedUsers.Designer.cs">
+      <DependentUpon>201808021226300_SeedUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -249,6 +257,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductCart.cs" />
+    <Compile Include="Models\RoleName.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\CartViewModel.cs" />
@@ -265,7 +274,6 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -371,7 +379,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\" />
+    <Folder Include="Public\Images\Products\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -394,6 +402,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808012330572_AddPurchaseDateToCart.resx">
       <DependentUpon>201808012330572_AddPurchaseDateToCart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808021157189_ChangeProductImagesLocation.resx">
+      <DependentUpon>201808021157189_ChangeProductImagesLocation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808021226300_SeedUsers.resx">
+      <DependentUpon>201808021226300_SeedUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

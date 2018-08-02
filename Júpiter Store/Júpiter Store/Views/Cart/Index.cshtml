@@ -28,7 +28,7 @@
                 }
             </ul>
             <div id="total-price" class="text-right my-3">
-                Total: R$ <span id="total-price-value">@Model.FinalPrice</span>
+                Total: <span id="total-price-value">@Model.GetFinalPrice()</span>
             </div>
             <div class="float-right">
                 <button type="submit" id="submit-order" class="btn btn-primary mt-2">Finalizar</button>
@@ -77,11 +77,12 @@ else
         });
 
         function updateProductChange($product, data) {
-            var $qnt = $product.find(".quantity-value");
+            var $qnt = $product.find(".quantity-value"),
+                $totalPrice = $("#total-price-value");
 
             $qnt.html(data.productQuantity);
 
-            $("#total-price-value").html(data.cartFinalPrice);
+            $totalPrice.html(data.cartFinalPrice);
         }
 
 

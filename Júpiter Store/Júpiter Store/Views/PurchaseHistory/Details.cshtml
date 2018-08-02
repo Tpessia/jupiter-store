@@ -15,7 +15,7 @@
                     <li class="purchased-item list-group-item d-flex justify-content-between align-items-center">
                         <span class="product-image"><img src="@Url.Content(product.ImagePath)"/></span>
                         <span class="product-name">@product.Name</span>
-                        <span class="product-price">@product.GetTotalPrice()</span>
+                        <span class="product-price">@product.GetPrice()</span>
                         <span class="product-quantity">@product.Quantity</span>
                     </li>
                 }
@@ -23,6 +23,6 @@
         </ul>
     </div>
     <div class="col-12 my-3 text-right">
-        Total: @Model.FinalPrice
+        Total: @Model.GetFinalPrice()
     </div>
 </div>

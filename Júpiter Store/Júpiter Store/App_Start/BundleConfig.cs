@@ -25,9 +25,9 @@ namespace Júpiter_Store
                       "~/Scripts/toastr.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/css/bootstrap.css",
                       "~/Content/toastr.css",
-                      "~/Content/site.css"));
+                      "~/Content/css/main.css"));
         }
     }
 }

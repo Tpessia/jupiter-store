@@ -85,7 +85,7 @@ namespace Júpiter_Store.Controllers.Api
             
             _context.SaveChanges();
 
-            return Ok(new CartAndProductDataDto { CartFinalPrice = ActiveCart.FinalPrice, ProductQuantity = newQuantity });
+            return Ok(new CartAndProductDataDto { CartFinalPrice = ActiveCart.GetFinalPrice(), ProductQuantity = newQuantity });
         }
 
         // DELETE: Api/Cart/1
@@ -125,7 +125,7 @@ namespace Júpiter_Store.Controllers.Api
 
             _context.SaveChanges();
 
-            return Ok(new CartAndProductDataDto { CartFinalPrice = ActiveCart.FinalPrice, ProductQuantity = newQuantity });
+            return Ok(new CartAndProductDataDto { CartFinalPrice = ActiveCart.GetFinalPrice(), ProductQuantity = newQuantity });
         }
 
         // POST: Api/Cart/Order

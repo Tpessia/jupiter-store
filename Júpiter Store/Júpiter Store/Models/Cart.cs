@@ -12,7 +12,6 @@ namespace Júpiter_Store.Models
         public ICollection<ProductCart> Products { get; set; }
         public bool IsActive { get; set; }
         public DateTime? PurchaseDate { get; set; }
-
         public double FinalPrice
         {
             get
@@ -26,6 +25,11 @@ namespace Júpiter_Store.Models
 
                 return finalPrice;
             }
+        }
+
+        public string GetFinalPrice()
+        {
+            return $"R$ {FinalPrice}";
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Júpiter_Store.ViewModels
         public List<ProductViewModel> Products { get; set; }
         public bool IsActive { get; set; }
         public DateTime? PurchaseDate { get; set; }
-
         public double FinalPrice
         {
             get
@@ -41,6 +40,7 @@ namespace Júpiter_Store.ViewModels
                 Products.Add(new ProductViewModel(productCart));
             }
         }
+
 
         public string GetFinalPrice()
         {

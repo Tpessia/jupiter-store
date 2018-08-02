@@ -8,7 +8,7 @@ using Júpiter_Store.Models;
 
 namespace Júpiter_Store.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Manager,Admin")]
     public class ProductsController : Controller
     {
         private ApplicationDbContext _context;
@@ -99,7 +99,7 @@ namespace Júpiter_Store.Controllers
 
         public string SaveProductImage(Product product, HttpPostedFileBase imageFile)
         {
-            var path = Path.Combine(@"~\Images", product.Name.Replace(" ", "_") + "_" + product.Id + Path.GetExtension(imageFile.FileName));
+            var path = Path.Combine(@"~\Public\Images\Products", product.Name.Replace(" ", "_") + "_" + product.Id + Path.GetExtension(imageFile.FileName));
 
             imageFile.SaveAs(Server.MapPath(path));
 

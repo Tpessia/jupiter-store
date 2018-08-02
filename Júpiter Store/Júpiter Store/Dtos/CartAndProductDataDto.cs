@@ -7,7 +7,7 @@ namespace Júpiter_Store.Dtos
 {
     public class CartAndProductDataDto
     {
-        public double CartFinalPrice { get; set; }
+        public string CartFinalPrice { get; set; }
 
         public int ProductQuantity { get; set; }
     }

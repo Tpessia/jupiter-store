@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Júpiter_Store.Controllers
 {
+    [Authorize]
     public class PurchaseHistoryController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -38,7 +39,7 @@ namespace Júpiter_Store.Controllers
         // GET: PurchaseHistory
         public ActionResult Index()
         {
-            var purchaseHistory = Carts.Where(c => !c.IsActive).Select(c => new CartViewModel(c));
+            var purchaseHistory = Carts.Where(c => !c.IsActive).Select(c => new CartViewModel(c)).ToList();
 
             return View(purchaseHistory);
         }
