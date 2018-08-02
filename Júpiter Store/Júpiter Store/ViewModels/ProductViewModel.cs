@@ -14,6 +14,7 @@ namespace Júpiter_Store.ViewModels
         public string ImagePath { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
+
         public double TotalPrice
         {
             get { return Price * Quantity; }

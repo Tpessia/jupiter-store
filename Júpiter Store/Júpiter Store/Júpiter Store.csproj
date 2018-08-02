@@ -211,6 +211,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\PurchaseHistoryController.cs" />
     <Compile Include="Dtos\CartAndProductDataDto.cs" />
     <Compile Include="Dtos\CartDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
@@ -236,6 +237,10 @@
     <Compile Include="Migrations\201808011609306_UpdateCartToICollectionOnUser.cs" />
     <Compile Include="Migrations\201808011609306_UpdateCartToICollectionOnUser.Designer.cs">
       <DependentUpon>201808011609306_UpdateCartToICollectionOnUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808012330572_AddPurchaseDateToCart.cs" />
+    <Compile Include="Migrations\201808012330572_AddPurchaseDateToCart.Designer.cs">
+      <DependentUpon>201808012330572_AddPurchaseDateToCart.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -361,6 +366,8 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Cart\Index.cshtml" />
+    <Content Include="Views\PurchaseHistory\Index.cshtml" />
+    <Content Include="Views\PurchaseHistory\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -384,6 +391,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808011609306_UpdateCartToICollectionOnUser.resx">
       <DependentUpon>201808011609306_UpdateCartToICollectionOnUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808012330572_AddPurchaseDateToCart.resx">
+      <DependentUpon>201808012330572_AddPurchaseDateToCart.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

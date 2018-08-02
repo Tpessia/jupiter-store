@@ -46,6 +46,17 @@ textarea {
 
 
 
+#purchase-details #product-list .purchased-item {
+    height: 75px;
+}
+
+#purchase-details #product-list .purchased-item .product-image,
+#purchase-details #product-list .purchased-item .product-image img {
+    height: 100%;
+}
+
+
+
 .btn.btn-flat {
     background-color: transparent;
     background-image: none;

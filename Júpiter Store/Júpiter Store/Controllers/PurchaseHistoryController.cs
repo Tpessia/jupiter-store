@@ -10,23 +10,22 @@ using Microsoft.AspNet.Identity;
 
 namespace Júpiter_Store.Controllers
 {
-    [Authorize]
-    public class CartController : Controller
+    public class PurchaseHistoryController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly string _userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-        private Cart ActiveCart
+        private ICollection<Cart> Carts
         {
             get
             {
                 return _context.Users
                     .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
                     .Single(u => u.Id == _userId)
-                    ?.Carts.SingleOrDefault(c => c.IsActive);
+                    ?.Carts;
             }
         }
 
-        public CartController()
+        public PurchaseHistoryController()
         {
             _context = new ApplicationDbContext();
         }
@@ -35,13 +34,21 @@ namespace Júpiter_Store.Controllers
         {
             _context.Dispose();
         }
-        
 
-
-        // GET: Cart
+        // GET: PurchaseHistory
         public ActionResult Index()
         {
-            return View(new CartViewModel(ActiveCart));
+            var purchaseHistory = Carts.Where(c => !c.IsActive).Select(c => new CartViewModel(c));
+
+            return View(purchaseHistory);
+        }
+
+        // GET: PurchaseHistory/Details/1
+        public ActionResult Details(int id)
+        {
+            var cart = Carts.SingleOrDefault(c => c.Id == id);
+
+            return View(new CartViewModel(cart));
         }
     }
 }

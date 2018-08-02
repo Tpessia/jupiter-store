@@ -9,8 +9,9 @@ namespace Júpiter_Store.ViewModels
     public class CartViewModel
     {
         public int Id { get; set; }
-
         public List<ProductViewModel> Products { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime? PurchaseDate { get; set; }
 
         public double FinalPrice
         {
@@ -32,11 +33,18 @@ namespace Júpiter_Store.ViewModels
         {
             Id = cart.Id;
             Products = new List<ProductViewModel>();
+            IsActive = cart.IsActive;
+            PurchaseDate = cart.PurchaseDate;
 
             foreach (var productCart in cart.Products)
             {
                 Products.Add(new ProductViewModel(productCart));
             }
+        }
+
+        public string GetFinalPrice()
+        {
+            return $"R$ {FinalPrice}";
         }
     }
 }

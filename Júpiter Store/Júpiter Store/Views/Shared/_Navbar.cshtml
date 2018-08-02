@@ -6,9 +6,9 @@
         @Html.ActionLink("Júpiter", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
-                <li>@Html.ActionLink("Início", "Index", "Home", null, new { @class = "nav-link" })</li>
                 <li>@Html.ActionLink("Produtos", "Index", "Products", null, new { @class = "nav-link" })</li>
                 <li>@Html.ActionLink("Carrinho", "Index", "Cart", null, new { @class = "nav-link" })</li>
+                <li>@Html.ActionLink("Histórico", "Index", "PurchaseHistory", null, new { @class = "nav-link" })</li>
             </ul>
             @Html.Partial("_LoginPartial")
 

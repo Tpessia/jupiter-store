@@ -9,10 +9,9 @@ namespace Júpiter_Store.Models
     public class Cart
     {
         public int Id { get; set; }
-        
         public ICollection<ProductCart> Products { get; set; }
-
         public bool IsActive { get; set; }
+        public DateTime? PurchaseDate { get; set; }
 
         public double FinalPrice
         {

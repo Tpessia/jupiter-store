@@ -16,7 +16,18 @@ namespace Júpiter_Store.Controllers.Api
 {
     public class CartController : ApiController
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
+        private readonly string _userId = HttpContext.Current.User.Identity.GetUserId();
+        private Cart ActiveCart
+        {
+            get
+            {
+                return _context.Users
+                    .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                    .Single(u => u.Id == _userId)
+                    ?.Carts.SingleOrDefault(c => c.IsActive);
+            }
+        }
 
         public CartController()
         {
@@ -31,21 +42,10 @@ namespace Júpiter_Store.Controllers.Api
         // GET: Api/Cart
         public IHttpActionResult GetCart()
         {
-            var userId = User.Identity.GetUserId();
-
-            if (userId == null)
+            if (ActiveCart == null)
                 return NotFound();
 
-
-            var cart = _context.Users
-                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
-                .Single(u => u.Id == userId)
-                ?.Carts.SingleOrDefault(c => c.IsActive);
-
-            if (cart == null)
-                return NotFound();
-
-            return Ok(new CartDto(cart));
+            return Ok(new CartDto(ActiveCart));
         }
 
         // POST: Api/Cart
@@ -55,27 +55,15 @@ namespace Júpiter_Store.Controllers.Api
             if (quantity < 1)
                 return BadRequest("Invalid quantity. Should be an integer higher than 0.");
 
-
-            var userId = User.Identity.GetUserId();
-
-            if (userId == null)
-                return NotFound();
-
-
-            var cart = _context.Users
-                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
-                .Single(u => u.Id == userId)
-                ?.Carts.SingleOrDefault(c => c.IsActive);
-
-            if (cart == null)
+            if (ActiveCart == null)
                 return NotFound();
 
 
             int newQuantity;
 
-            if (cart.Products.Any(p => p.ProductId == id)) // Increment Product
+            if (ActiveCart.Products.Any(p => p.ProductId == id)) // Increment Product
             {
-                newQuantity = cart.Products.Single(p => p.ProductId == id).Quantity += quantity.GetValueOrDefault();
+                newQuantity = ActiveCart.Products.Single(p => p.ProductId == id).Quantity += quantity.GetValueOrDefault();
             }
             else // New Product
             {
@@ -84,10 +72,10 @@ namespace Júpiter_Store.Controllers.Api
                 if (product == null)
                     return NotFound();
 
-                cart.Products.Add(new ProductCart()
+                ActiveCart.Products.Add(new ProductCart()
                 {
                     Product = product,
-                    Cart = cart,
+                    Cart = ActiveCart,
                     Quantity = 1
                 });
 
@@ -97,7 +85,7 @@ namespace Júpiter_Store.Controllers.Api
             
             _context.SaveChanges();
 
-            return Ok(new CartAndProductDataDto { CartFinalPrice = cart.FinalPrice, ProductQuantity = newQuantity });
+            return Ok(new CartAndProductDataDto { CartFinalPrice = ActiveCart.FinalPrice, ProductQuantity = newQuantity });
         }
 
         // DELETE: Api/Cart/1
@@ -108,24 +96,13 @@ namespace Júpiter_Store.Controllers.Api
                 return BadRequest("Invalid quantity. Should be an integer higher than 0.");
 
 
-            var userId = User.Identity.GetUserId();
-
-            if (userId == null)
-                return NotFound();
-
-
-            var cart = _context.Users
-                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
-                .Single(u => u.Id == userId)
-                ?.Carts.SingleOrDefault(c => c.IsActive);
-
-            if (cart == null)
+            if (ActiveCart == null)
                 return NotFound();
 
 
             int newQuantity;
 
-            var productCart = cart.Products.SingleOrDefault(p => p.ProductId == id);
+            var productCart = ActiveCart.Products.SingleOrDefault(p => p.ProductId == id);
 
             if (productCart == null)
                 return NotFound();
@@ -136,7 +113,7 @@ namespace Júpiter_Store.Controllers.Api
             }
             else if (productCart.Quantity == quantity) // Last Item
             {
-                cart.Products.Remove(productCart);
+                ActiveCart.Products.Remove(productCart);
 
                 newQuantity = 0;
             }
@@ -148,7 +125,7 @@ namespace Júpiter_Store.Controllers.Api
 
             _context.SaveChanges();
 
-            return Ok(new CartAndProductDataDto { CartFinalPrice = cart.FinalPrice, ProductQuantity = newQuantity });
+            return Ok(new CartAndProductDataDto { CartFinalPrice = ActiveCart.FinalPrice, ProductQuantity = newQuantity });
         }
 
         // POST: Api/Cart/Order
@@ -156,22 +133,11 @@ namespace Júpiter_Store.Controllers.Api
         [Route("Api/Cart/Order")]
         public IHttpActionResult PlaceOrder()
         {
-            var userId = User.Identity.GetUserId();
-
-            if (userId == null)
+            if (ActiveCart == null || !ActiveCart.Products.Any())
                 return NotFound();
 
 
-            var cart = _context.Users
-                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
-                .Single(u => u.Id == userId)
-                ?.Carts.SingleOrDefault(c => c.IsActive);
-
-            if (cart == null || !cart.Products.Any())
-                return NotFound();
-
-
-            foreach (var cartProduct in cart.Products)
+            foreach (var cartProduct in ActiveCart.Products)
             {
                 if (cartProduct.Quantity > cartProduct.Product.NumberInStock)
                     return BadRequest($"Quantidade no carrinho é maior do que o estoque ({cartProduct.Product.Name})");
@@ -180,10 +146,11 @@ namespace Júpiter_Store.Controllers.Api
             }
 
 
-            cart.IsActive = false;
+            ActiveCart.PurchaseDate = DateTime.Now;
+            ActiveCart.IsActive = false;
             _context.Users
                 .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
-                .Single(u => u.Id == userId)
+                .Single(u => u.Id == _userId)
                 .Carts.Add(new Cart
                 {
                     IsActive = true

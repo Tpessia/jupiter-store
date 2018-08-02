@@ -8,6 +8,7 @@ using Júpiter_Store.Models;
 
 namespace Júpiter_Store.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private ApplicationDbContext _context;
@@ -25,6 +26,7 @@ namespace Júpiter_Store.Controllers
 
 
         // GET: Products
+        [AllowAnonymous]
         public ActionResult Index()
         {
             var products = _context.Products.ToList();
@@ -53,6 +55,7 @@ namespace Júpiter_Store.Controllers
 
         // POST: Products/Save
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Product product, HttpPostedFileBase imageFile)
         {
             if (!ModelState.IsValid)
