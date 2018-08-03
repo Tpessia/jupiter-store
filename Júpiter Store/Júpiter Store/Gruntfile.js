@@ -5,19 +5,13 @@ module.exports = function (grunt) {
 
         sass: {
             dist: {
+                options: {
+                    sourcemap: "file"
+                },
                 files: [{
                     expand: true,
                     cwd: 'Content/sass',
                     src: ['{,*/}*.scss'],
-                    dest: 'Content/css',
-                    ext: '.css'
-                }]
-            },
-            bootstrap: {
-                files: [{
-                    expand: true,
-                    cwd: 'Content/sass',
-                    src: ['*.scss'],
                     dest: 'Content/css',
                     ext: '.css'
                 }]

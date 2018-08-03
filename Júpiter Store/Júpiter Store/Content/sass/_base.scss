@@ -1,0 +1,53 @@
+body {
+    background-color: $color-dark;
+    padding-top: 90px;
+    padding-bottom: 20px;
+
+    .navbar {
+        background-color: $color-grey;
+        .navbar-brand {
+            img {
+                width: 30px;
+                height: 30px;
+            }
+        }
+        .nav-link {
+            font-size: 1.05rem;
+        }
+    }
+
+    main {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .dl-horizontal dt {
+        /* Override the default bootstrap behavior where horizontal description lists will truncate terms that are too long to fit in the left column */
+        white-space: normal;
+    }
+
+    input,
+    select,
+    textarea {
+        /* Set width on the form input elements since they're 100% wide by default */
+        max-width: 280px;
+    }
+
+    .btn {
+        &.btn-flat {
+            background-color: transparent;
+            background-image: none;
+            border-color: transparent;
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
+
+    a {
+        color: $color-second;
+        &:hover {
+            color: lighten($color-second, 10%);
+        }
+    }
+}

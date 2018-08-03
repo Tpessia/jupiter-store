@@ -1,0 +1,111 @@
+$color-first: #E1320A;
+$color-second: #FF791C;
+$color-third: #FFD393;
+$color-forth: #405952;
+$color-grey: #2A2C2B;
+$color-dark: #1E1E20;
+
+.text-first {
+    color: $color-first !important;
+}
+.text-second {
+    color: $color-second !important;
+}
+.text-third {
+    color: $color-third !important;
+}
+.text-forth {
+    color: $color-forth !important;
+}
+.text-grey {
+    color: $color-grey !important;
+}
+.text-dark {
+    color: $color-dark !important;
+}
+
+.bg-first {
+    background-color: $color-first !important;
+}
+.bg-second {
+    background-color: $color-second !important;
+}
+.bg-third {
+    background-color: $color-third !important;
+}
+.bg-forth {
+    background-color: $color-forth !important;
+}
+.bg-grey {
+    background-color: $color-grey !important;
+}
+.bg-dark {
+    background-color: $color-dark !important;
+}
+
+.btn-first {
+    color: #ffffff;
+    background-color: $color-first !important;
+    &:hover {
+        color: #ffffff;
+        background-color: lighten($color-first, 10%) !important;
+    }
+    &:focus {
+        box-shadow: none;
+    }
+}
+.btn-second {
+    color: $color-dark;
+    background-color: $color-second !important;
+    &:hover {
+        color: $color-dark;
+        background-color: lighten($color-second, 10%) !important;
+    }
+    &:focus {
+        box-shadow: none;
+    }
+}
+.btn-third {
+    color: $color-dark;
+    background-color: $color-third !important;
+    &:hover {
+        color: $color-dark;
+        background-color: lighten($color-third, 10%) !important;
+    }
+    &:focus {
+        box-shadow: none;
+    }
+}
+.btn-forth {
+    color: #ffffff;
+    background-color: $color-forth !important;
+    &:hover {
+        color: #ffffff;
+        background-color: lighten($color-forth, 10%) !important;
+    }
+    &:focus {
+        box-shadow: none;
+    }
+}
+.btn-grey {
+    color: #ffffff;
+    background-color: $color-grey !important;
+    &:hover {
+        color: #ffffff;
+        background-color: lighten($color-grey, 10%) !important;
+    }
+    &:focus {
+        box-shadow: none;
+    }
+}
+.btn-dark {
+    color: #ffffff;
+    background-color: $color-dark !important;
+    &:hover {
+        color: #ffffff;
+        background-color: lighten($color-dark, 10%) !important;
+    }
+    &:focus {
+        box-shadow: none;
+    }
+}

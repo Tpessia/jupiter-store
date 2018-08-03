@@ -1,9 +1,11 @@
-﻿<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+﻿<nav class="navbar navbar-expand-md fixed-top">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        @Html.ActionLink("Júpiter", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        <a class="navbar-brand" href="/">
+            <img src="/Content/img/jupiter-logo-32.png" alt="Júpiter" class="d-inline-block align-top" />
+        </a>
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
                 <li>@Html.ActionLink("Produtos", "Index", "Products", null, new { @class = "nav-link" })</li>
@@ -11,7 +13,6 @@
                 <li>@Html.ActionLink("Histórico", "Index", "PurchaseHistory", null, new { @class = "nav-link" })</li>
             </ul>
             @Html.Partial("_LoginPartial")
-
         </div>
     </div>
 </nav>

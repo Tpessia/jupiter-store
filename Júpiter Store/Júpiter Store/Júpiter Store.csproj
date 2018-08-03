@@ -212,6 +212,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\PurchaseHistoryController.cs" />
+    <Compile Include="Controllers\UserManagerController.cs" />
     <Compile Include="Dtos\CartAndProductDataDto.cs" />
     <Compile Include="Dtos\CartDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
@@ -376,6 +377,8 @@
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\PurchaseHistory\Index.cshtml" />
     <Content Include="Views\PurchaseHistory\Details.cshtml" />
+    <Content Include="Views\UserManager\Index.cshtml" />
+    <Content Include="Views\UserManager\UserManagerForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

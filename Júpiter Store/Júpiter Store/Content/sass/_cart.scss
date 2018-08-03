@@ -1,0 +1,28 @@
+#cart-container {
+    .cart-products {
+        padding: 0;
+
+        .cart-product {
+            height: 75px;
+            .product-image,
+            .product-image img {
+                height: 100%;
+            }
+        }
+
+        .product-quantity {
+            .quantity-arrows {
+                .btn {
+                    padding: 0 5px;
+                    &.quantity-arrow-up {
+                        margin-bottom: -5px;
+                    }
+                    svg {
+                        fill: $color-forth;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}

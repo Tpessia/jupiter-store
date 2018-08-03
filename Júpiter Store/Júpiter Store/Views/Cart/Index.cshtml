@@ -9,7 +9,7 @@
 @if (Model != null && Model.Products.Any())
 {
     <div id="cart-container" class="row">
-        <form id="cart-form" class="col-12" onsubmit="return false;">
+        <form id="cart-form" class="col-12" onsubmit="return false;" data-cart-id="@Model.Id">
             <ul class="cart-products list-group list-group-flush">
                 @foreach (var product in Model.Products)
                 {
@@ -20,8 +20,8 @@
                         <span class="product-quantity d-flex align-items-center">
                             <span class="quantity-value pr-2">@product.Quantity</span>
                             <span class="quantity-arrows d-flex flex-column">
-                                <button type="button" class="quantity-arrow-up btn btn-flat"><svg height="10" width="10" class="up"><polygon points="0,10 5,0 10,10" style="fill: rgb(0, 0, 0);"></polygon></svg></button>
-                                <button type="button" class="quantity-arrow-down btn btn-flat"><svg height="10" width="10" class="down"><polygon points="0,0 10,0 5,10" style="fill: rgb(0, 0, 0);"></polygon></svg></button>
+                                <button type="button" class="quantity-arrow-up btn btn-flat"><svg height="10" width="10" class="up"><polygon points="0,10 5,0 10,10"></polygon></svg></button>
+                                <button type="button" class="quantity-arrow-down btn btn-flat"><svg height="10" width="10" class="down"><polygon points="0,0 10,0 5,10"></polygon></svg></button>
                             </span>
                         </span>
                     </li>
@@ -31,7 +31,7 @@
                 Total: <span id="total-price-value">@Model.GetFinalPrice()</span>
             </div>
             <div class="float-right">
-                <button type="submit" id="submit-order" class="btn btn-primary mt-2">Finalizar</button>
+                <button type="submit" id="submit-order" class="btn btn-first mt-2">Finalizar</button>
             </div>
         </form>
     </div>
@@ -92,7 +92,9 @@ else
                 url: "/api/cart/order",
                 method: "POST",
                 success: function () {
-                    window.location.reload(true);
+                    var cartId = $("#cart-form").attr("data-cart-id");
+
+                    window.location.href = "/purchasehistory/details/" + cartId;
                 },
                 error: function () {
                     toastr.error("Erro ao enviar o pedido");

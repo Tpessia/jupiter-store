@@ -21,15 +21,15 @@
                          <p class="card-text">@product.GetPrice()</p>
                          @if (User.Identity.IsAuthenticated)
                          {
-                            <button class="buy-product btn btn-primary">Comprar</button>
+                            <button class="buy-product btn btn-first">Comprar</button>
                          }
                          else
                          {
-                             <a href="/account/login" class="btn btn-primary">Comprar</a>
+                             <a href="/account/login" class="btn btn-first">Comprar</a>
                          }
                          @if (User.IsInRole(RoleName.Manager) || User.IsInRole(RoleName.Admin))
                          {
-                             <a href="/products/edit/@product.Id" class="btn btn-warning">Editar</a>
+                             <a href="/products/edit/@product.Id" class="btn btn-second">Editar</a>
                          }
                      </div>
                  </div>
