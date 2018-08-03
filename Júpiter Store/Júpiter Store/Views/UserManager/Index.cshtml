@@ -1,7 +1,33 @@
-﻿@model dynamic
+﻿@model IEnumerable<Júpiter_Store.ViewModels.UserManagerViewModel>
 
 @{
     ViewBag.Title = "Gerenciador de Usuários";
 }
 
 <h2>@ViewBag.Title</h2>
+
+@if (Model.Any())
+{
+    <div id="users" class="row">
+        <div class="col-12">
+            <ul id="user-list" class="list-group list-group-flush">
+                @foreach (var user in Model)
+                {
+                    <li class="user-item list-group-item d-flex justify-content-between align-items-center">
+                        <span>@user.Email</span>
+                        <span>@string.Join(",", user.Roles)</span>
+                        <span class="user-edit">
+                            <button class="user-edit-button btn btn-first" type="button">Editar</button>
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div>
+        Nenhum usuário cadastrado.
+    </div>
+}

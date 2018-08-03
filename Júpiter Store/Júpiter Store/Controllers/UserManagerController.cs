@@ -2,23 +2,28 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using Júpiter_Store.Models;
+using Júpiter_Store.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Júpiter_Store.Controllers
 {
+    [Authorize(Roles = RoleName.Admin)]
     public class UserManagerController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public UserManagerController()
         {
             _context = new ApplicationDbContext();
+            _roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(_context));
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
         }
 
         protected override void Dispose(bool disposing)
@@ -26,11 +31,22 @@ namespace Júpiter_Store.Controllers
             _context.Dispose();
         }
 
+         
+
+
+
         // GET: UserManager
         public ActionResult Index()
         {
-            var users = _context.Users.Include(u => u.Roles);
-
+            var users = _context.Users
+                .ToList()
+                .Select(u => new UserManagerViewModel()
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    Roles = _userManager.GetRoles(u.Id).ToList()
+                });
+            
             return View(users);
         }
 
@@ -39,6 +55,12 @@ namespace Júpiter_Store.Controllers
         {
             var user = _context.Users
                 .Include(u => u.Roles)
+                .Select(u => new UserManagerViewModel()
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    Roles = _userManager.GetRoles(u.Id).ToList()
+                })
                 .SingleOrDefault(u => u.Id == userId);
 
             if (user == null)
@@ -48,27 +70,18 @@ namespace Júpiter_Store.Controllers
         }
 
         // GET: UserManager/Save
+        [Authorize(Roles = RoleName.Admin)]
         public ActionResult Save(string userId, string newRole)
         {
-            var user = _context.Users
-                .Include(u => u.Roles)
-                .SingleOrDefault(u => u.Id == userId);
+            var user = _userManager.FindById(userId);
 
-            if (user == null)
+            if (user == null || !_roleManager.RoleExists(newRole))
                 return HttpNotFound();
 
 
-            //var propertyInfo = typeof(RoleName).GetProperty(newRole);
-
-            //if (propertyInfo == null)
-            //    return HttpNotFound();
-
-
-            //var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-
-            userManager.RemoveFromRoles(user.Id, user.Roles.Select(r => r.ToString()).ToArray());
-            userManager.AddToRole(user.Id, newRole);
+            _userManager.RemoveFromRoles(user.Id, _userManager.GetRoles(user.Id).ToArray());
+            _userManager.AddToRoles(user.Id, newRole);
+            _userManager.Update(user);
 
             return RedirectToAction("Index");
         }

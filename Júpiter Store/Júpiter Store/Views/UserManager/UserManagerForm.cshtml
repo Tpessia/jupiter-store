@@ -1,4 +1,4 @@
-﻿@model dynamic
+﻿@model Júpiter_Store.ViewModels.UserManagerViewModel
 
 @{
     ViewBag.Title = "Editar Usuário";
@@ -6,3 +6,24 @@
 
 <h2>@ViewBag.Title</h2>
 
+@using (Html.BeginForm("Save", "UserManager"))
+{
+    @Html.ValidationSummary(true, "Ajustes os erros seguintes.")
+
+    <div class="form-group">
+        @Html.LabelFor(u => u.Email)
+        @Html.TextAreaFor(u => u.Email, new { @class = "form-control", disabled="true" })
+        @Html.ValidationMessageFor(u => u.Email)
+    </div>
+
+    @*<div class="form-group">
+        @Html.LabelFor(u => u.MovieGenreId)
+        @Html.DropDownListFor(u => u.MovieGenreId, new SelectList(Model.MovieGenre, "Id", "Name"), "Select Membership Type", new { @class = "form-control" })
+        @Html.ValidationMessageFor(u => u.MovieGenreId)
+    </div>*@
+
+    @Html.HiddenFor(u => u.Id)
+    @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-first">Salvar</button>
+}
