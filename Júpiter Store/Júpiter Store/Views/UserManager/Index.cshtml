@@ -15,9 +15,9 @@
                 {
                     <li class="user-item list-group-item d-flex justify-content-between align-items-center">
                         <span>@user.Email</span>
-                        <span>@string.Join(",", user.Roles)</span>
+                        <span>@string.Join(", ", user.UserRoles.Select(u => u.Name))</span>
                         <span class="user-edit">
-                            <button class="user-edit-button btn btn-first" type="button">Editar</button>
+                            <a href="/usermanager/edit?userId=@user.Id" class="user-edit-button btn btn-first">Editar</a>
                         </span>
                     </li>
                 }

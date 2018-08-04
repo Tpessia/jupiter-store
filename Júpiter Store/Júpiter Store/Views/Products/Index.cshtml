@@ -5,7 +5,13 @@
     ViewBag.Title = "Produtos";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>
+    @ViewBag.Title
+    @if (User.IsInRole(RoleName.Manager))
+    {
+        <a href="/products/new" class="btn btn-second ml-2">Novo</a>
+    }
+</h2>
 
 @if (Model.Any())
 {
@@ -27,7 +33,7 @@
                          {
                              <a href="/account/login" class="btn btn-first">Comprar</a>
                          }
-                         @if (User.IsInRole(RoleName.Manager) || User.IsInRole(RoleName.Admin))
+                         @if (User.IsInRole(RoleName.Manager))
                          {
                              <a href="/products/edit/@product.Id" class="btn btn-second">Editar</a>
                          }

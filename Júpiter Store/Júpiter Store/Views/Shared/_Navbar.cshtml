@@ -1,4 +1,5 @@
-﻿<nav class="navbar navbar-expand-md fixed-top">
+﻿@using Júpiter_Store.Models
+<nav class="navbar navbar-expand-md fixed-top">
     <div class="container">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -11,6 +12,10 @@
                 <li>@Html.ActionLink("Produtos", "Index", "Products", null, new { @class = "nav-link" })</li>
                 <li>@Html.ActionLink("Carrinho", "Index", "Cart", null, new { @class = "nav-link" })</li>
                 <li>@Html.ActionLink("Histórico", "Index", "PurchaseHistory", null, new { @class = "nav-link" })</li>
+                @if (User.IsInRole(RoleName.Admin))
+                {
+                    <li>@Html.ActionLink("Usuários", "Index", "UserManager", null, new { @class = "nav-link" })</li>
+                }
             </ul>
             @Html.Partial("_LoginPartial")
         </div>

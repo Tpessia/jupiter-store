@@ -8,7 +8,7 @@ using Júpiter_Store.Models;
 
 namespace Júpiter_Store.Controllers
 {
-    [Authorize(Roles = RoleName.Admin + "," + RoleName.Manager)]
+    [Authorize(Roles = RoleName.Manager)]
     public class ProductsController : Controller
     {
         private ApplicationDbContext _context;
