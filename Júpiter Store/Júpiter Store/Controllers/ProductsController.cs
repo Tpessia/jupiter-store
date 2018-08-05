@@ -11,7 +11,7 @@ namespace Júpiter_Store.Controllers
     [Authorize(Roles = RoleName.Manager)]
     public class ProductsController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public ProductsController()
         {
@@ -106,7 +106,19 @@ namespace Júpiter_Store.Controllers
             return path;
         }
 
-        // GET: Products/CheckOut
+        // POST: Products/Delete/1
+        public ActionResult Delete(int id)
+        {
+            var product = _context.Products.SingleOrDefault(p => p.Id == id);
+
+            if (product == null)
+                return HttpNotFound();
+
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
 
     }
 }

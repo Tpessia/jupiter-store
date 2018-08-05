@@ -44,10 +44,10 @@
     box-shadow: none; }
 
 .btn-second {
-  color: #1E1E20;
+  color: #ffffff;
   background-color: #FF791C !important; }
   .btn-second:hover {
-    color: #1E1E20;
+    color: #ffffff;
     background-color: #ff974f !important; }
   .btn-second:focus {
     box-shadow: none; }
@@ -98,7 +98,10 @@ body {
       width: 30px;
       height: 30px; }
     body .navbar .nav-link {
-      font-size: 1.05rem; }
+      font-size: 1.05rem;
+      color: #ffffff !important; }
+      body .navbar .nav-link:hover {
+        color: #FF791C !important; }
   body main {
     padding-left: 15px;
     padding-right: 15px; }

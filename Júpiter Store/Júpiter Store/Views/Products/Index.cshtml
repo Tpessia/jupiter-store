@@ -36,6 +36,7 @@
                          @if (User.IsInRole(RoleName.Manager))
                          {
                              <a href="/products/edit/@product.Id" class="btn btn-second">Editar</a>
+                             <button class="remove-product btn btn-grey" type="button">Remove</button>
                          }
                      </div>
                  </div>
@@ -66,6 +67,15 @@ else
                     toastr.error("Erro ao adicionar ao carrinho");
                 }
             });
+        });
+
+        $("#products").on("click", ".remove-product", function () {
+            var $product = $(this).parents(".product"),
+                productId = $product.attr("data-product-id");
+
+            if (window.confirm('Tem certeza que deseja remover o produto "' + productId + '"?')) {
+                window.location.href = "/products/delete/" + productId;
+            }
         });
     </script>
 }

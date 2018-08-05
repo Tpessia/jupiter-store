@@ -55,10 +55,10 @@ $color-dark: #1E1E20;
     }
 }
 .btn-second {
-    color: $color-dark;
+    color: #ffffff;
     background-color: $color-second !important;
     &:hover {
-        color: $color-dark;
+        color: #ffffff;
         background-color: lighten($color-second, 10%) !important;
     }
     &:focus {
