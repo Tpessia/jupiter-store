@@ -24,7 +24,7 @@ namespace Júpiter_Store
                       "~/Scripts/respond.js",
                       "~/Scripts/toastr.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/bundles/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/toastr.css",
                       "~/Content/css/main.css"));
