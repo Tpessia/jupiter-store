@@ -98,22 +98,30 @@ namespace Júpiter_Store.Controllers
                 return View("UserManagerForm", newUserData);
 
 
-            var userRoleNames = newUserData.UserRoleIds.Select(r => _roleManager.FindById(r).Name);
+            _userManager.RemoveFromRoles(applicationUser.Id, _userManager.GetRoles(applicationUser.Id).ToArray());
 
-            foreach (var roleName in userRoleNames)
+            if (newUserData.UserRoleIds != null)
             {
-                if (!_roleManager.RoleExists(roleName))
-                    return View("UserManagerForm", newUserData);
+                var userRoleNames = newUserData.UserRoleIds
+                    .Select(r => _roleManager.FindById(r).Name)
+                    .ToArray();
+
+                foreach (var roleName in userRoleNames)
+                {
+                    if (!_roleManager.RoleExists(roleName))
+                        return View("UserManagerForm", newUserData);
+                }
+
+                _userManager.AddToRoles(applicationUser.Id, userRoleNames);
             }
 
-
-            _userManager.RemoveFromRoles(applicationUser.Id, _userManager.GetRoles(applicationUser.Id).ToArray());
-            _userManager.AddToRoles(applicationUser.Id, newUserData.UserRoleIds.Select(r => _roleManager.FindById(r).Name).ToArray());
             _userManager.Update(applicationUser);
-            
+
+
+            var currentApplicationUser = _userManager.FindById(User.Identity.GetUserId());
             var authenticationManager = System.Web.HttpContext.Current.GetOwinContext().Authentication;
             authenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-            var identity = _userManager.CreateIdentity(applicationUser, DefaultAuthenticationTypes.ApplicationCookie);
+            var identity = _userManager.CreateIdentity(currentApplicationUser, DefaultAuthenticationTypes.ApplicationCookie);
             authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
 
             return RedirectToAction("Index");
