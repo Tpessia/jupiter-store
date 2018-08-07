@@ -338,9 +338,6 @@
     <Content Include="mstile-310x150.png" />
     <Content Include="mstile-310x310.png" />
     <Content Include="mstile-70x70.png" />
-    <Content Include="Public\Images\Products\Teste_1_1.jpg" />
-    <Content Include="Public\Images\Products\Teste_2_2.jpg" />
-    <Content Include="Public\Images\Products\Teste_3_3.jpg" />
     <Content Include="safari-pinned-tab.svg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -456,6 +453,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Public\Images\Products\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

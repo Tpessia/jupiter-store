@@ -27,7 +27,6 @@ namespace Júpiter_Store.Models
         public ICollection<ProductCart> CartsBelonging { get; set; }
 
 
-
         public string GetPrice()
         {
             return $"R$ {Price}";

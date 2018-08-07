@@ -6,28 +6,21 @@
 
 <h2>@ViewBag.Title</h2>
 
-@{
-    var purchasesLength = Model.Count();
-}
-
-@if (purchasesLength != 0)
+@if (Model.Any())
 {
     <div id="purchases" class="row">
         <div class="col-12">
             <ul id="purchase-list" class="list-group list-group-flush">
-                @{
-                    for (var i = 0; i < purchasesLength; i++)
-                    {
-                        var cart = Model[purchasesLength - i - 1];
-                        <li id="@cart.Id" class="purchase-item list-group-item d-flex justify-content-between align-items-center">
-                            <span class="purchase-number">Número: @cart.Id</span>
-                            <span class="purchase-date">Data: @cart.PurchaseDate.Value.ToString("g")</span>
-                            <span class="purchase-price">@cart.GetFinalPrice()</span>
-                            <span class="purchase-details">
-                                <button class="purchase-details-button btn btn-first" type="button">Ver Mais</button>
-                            </span>
-                        </li>
-                    }
+                @foreach (var cart in Model)
+                {
+                    <li id="@cart.Id" class="purchase-item list-group-item d-flex justify-content-between align-items-center">
+                        <span class="purchase-number">Número: @cart.Id</span>
+                        <span class="purchase-date">Data: @cart.PurchaseDate.Value.ToString("g")</span>
+                        <span class="purchase-price">@cart.GetFinalPrice()</span>
+                        <span class="purchase-details">
+                            <button class="purchase-details-button btn btn-first" type="button">Ver Mais</button>
+                        </span>
+                    </li>
                 }
             </ul>
         </div>

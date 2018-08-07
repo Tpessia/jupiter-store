@@ -5,10 +5,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Júpiter_Store.Models;
+using System.Data.Entity;
+using System.Net;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace Júpiter_Store.Controllers
 {
-    [Authorize(Roles = RoleName.Manager)]
+    [System.Web.Mvc.Authorize(Roles = RoleName.Manager)]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -26,10 +30,11 @@ namespace Júpiter_Store.Controllers
 
 
         // GET: Products
-        [AllowAnonymous]
+        [System.Web.Mvc.AllowAnonymous]
         public ActionResult Index()
         {
             var products = _context.Products.ToList();
+            products.Reverse();
 
             return View(products);
         }
@@ -54,7 +59,7 @@ namespace Júpiter_Store.Controllers
         }
 
         // POST: Products/Save
-        [HttpPost]
+        [System.Web.Mvc.HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Save(Product product, HttpPostedFileBase imageFile)
         {
@@ -70,7 +75,9 @@ namespace Júpiter_Store.Controllers
 
                 if (imageFile != null)
                 {
-                    newProduct.ImagePath = SaveProductImage(newProduct, imageFile);
+                    newProduct.ImagePath = GetProductImagePath(newProduct, imageFile);
+
+                    imageFile.SaveAs(Server.MapPath(newProduct.ImagePath));
                 }
 
                 _context.SaveChanges();
@@ -81,7 +88,9 @@ namespace Júpiter_Store.Controllers
             // Edit Product
             if (imageFile != null)
             {
-                product.ImagePath = SaveProductImage(product, imageFile);
+                product.ImagePath = GetProductImagePath(product, imageFile);
+
+                imageFile.SaveAs(Server.MapPath(product.ImagePath));
             }
 
             var productInDb = _context.Products.Single(p => p.Id == product.Id);
@@ -97,27 +106,36 @@ namespace Júpiter_Store.Controllers
             return Redirect("Index");
         }
 
-        public string SaveProductImage(Product product, HttpPostedFileBase imageFile)
-        {
-            var path = Path.Combine(@"~\Public\Images\Products", product.Name.Replace(" ", "_") + "_" + product.Id + Path.GetExtension(imageFile.FileName));
-
-            imageFile.SaveAs(Server.MapPath(path));
-
-            return path;
-        }
-
         // POST: Products/Delete/1
         public ActionResult Delete(int id)
         {
-            var product = _context.Products.SingleOrDefault(p => p.Id == id);
+            var product = _context.Products.Include(p => p.CartsBelonging).SingleOrDefault(p => p.Id == id);
 
             if (product == null)
                 return HttpNotFound();
 
-            _context.Products.Remove(product);
-            _context.SaveChanges();
+            if (product.CartsBelonging.Any())
+                throw new HttpResponseException(HttpStatusCode.Conflict);
+
+            if (System.IO.File.Exists(Server.MapPath(product.ImagePath)))
+            {
+                var path = Server.MapPath(product.ImagePath);
+
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+
+                System.IO.File.Delete(path);
+            }
 
             return RedirectToAction("Index");
+        }
+
+
+        // Helpers
+
+        public string GetProductImagePath(Product product, HttpPostedFileBase imageFile)
+        {
+            return Path.Combine(@"~\Public\Images\Products", product.Name.Replace(" ", "_") + "_" + product.DateAdded.ToString("yyyyMMddHHmmss") + Path.GetExtension(imageFile.FileName));
         }
 
     }

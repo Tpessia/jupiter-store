@@ -40,6 +40,7 @@ namespace Júpiter_Store.Controllers
         public ActionResult Index()
         {
             var purchaseHistory = Carts.Where(c => !c.IsActive).Select(c => new CartViewModel(c)).ToList();
+            purchaseHistory.Reverse();
 
             return View(purchaseHistory);
         }
