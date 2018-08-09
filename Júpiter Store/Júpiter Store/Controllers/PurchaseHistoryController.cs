@@ -50,6 +50,9 @@ namespace Júpiter_Store.Controllers
         {
             var cart = Carts.SingleOrDefault(c => c.Id == id);
 
+            if (cart == null)
+                return HttpNotFound();
+
             return View(new CartViewModel(cart));
         }
     }

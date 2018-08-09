@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using Uol.PagSeguro.Domain;
 
 namespace Júpiter_Store.Models
 {
@@ -12,6 +13,7 @@ namespace Júpiter_Store.Models
         public ICollection<ProductCart> Products { get; set; }
         public bool IsActive { get; set; }
         public DateTime? PurchaseDate { get; set; }
+        public string TransactionCode { get; set; }
         public double FinalPrice
         {
             get
