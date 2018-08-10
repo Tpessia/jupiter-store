@@ -154,8 +154,9 @@ namespace Júpiter_Store.Controllers
             {
                 var user = new ApplicationUser
                 {
-                    UserName = model.Email,
+                    UserName = model.Username,
                     Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
                     Carts = new List<Cart>()
                     {
                         new Cart()

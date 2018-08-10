@@ -5,12 +5,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using System.Xml;
 using Júpiter_Store.Dtos;
 using Júpiter_Store.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Uol.PagSeguro.Constants;
 using Uol.PagSeguro.Domain;
@@ -25,6 +27,7 @@ namespace Júpiter_Store.Controllers.Api
     {
         private readonly ApplicationDbContext _context;
         private readonly string _userId = HttpContext.Current.User.Identity.GetUserId();
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly AccountCredentials _credentials = PagSeguroConfiguration.Credentials();
         private Cart ActiveCart
         {
@@ -40,12 +43,17 @@ namespace Júpiter_Store.Controllers.Api
         public CartController()
         {
             _context = new ApplicationDbContext();
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
         }
 
         protected override void Dispose(bool disposing)
         {
             _context.Dispose();
         }
+
+
+
+
 
         // GET: Api/Cart
         public IHttpActionResult GetCart()
@@ -181,69 +189,67 @@ namespace Júpiter_Store.Controllers.Api
 
 
             // PagSeguro Logic
-            var address = new Address
-            {
-                Country = "BRA",
-                State = "SP",
-                City = "São Paulo",
-                District = "Jardim Paulistano",
-                PostalCode = "01452002",
-                Street = "Av. Brig. Faria Lima",
-                Number = "1384",
-                Complement = "5o. Andar"
-            };
+            //var address = new Address
+            //{
+            //    Country = "BRA",
+            //    State = "SP",
+            //    City = "São Paulo",
+            //    District = "Jardim Paulistano",
+            //    PostalCode = "01452002",
+            //    Street = "Av. Brig. Faria Lima",
+            //    Number = "1384",
+            //    Complement = "5o. Andar"
+            //};
 
+            var user = _userManager.FindById(_userId);
             var paymentRequest = new PaymentRequest
             {
                 Currency = Currency.Brl,
-                Sender = new Sender("José Comprador", "c41254692078685555836@sandbox.pagseguro.com.br", new Phone("11", "27855808")),
-                Shipping = new Shipping
-                {
-                    Address = address,
-                    Cost = 10.00m,
-                    ShippingType = ShippingType.Pac
-                },
-                ExtraAmount = 10.00m,
-                Reference = "0001",
-                RedirectUri = new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/PurchaseHistory/Details/" + "0001"),
+                Sender = new Sender(user.UserName, "c41254692078685555836@sandbox.pagseguro.com.br", new Phone(
+                    Regex.Match(user.PhoneNumber, @"^\((.*?)\)").Value.Trim('(', ')'),
+                    user.PhoneNumber.Substring(user.PhoneNumber.IndexOf(')') + 1)
+                    )),
+                //Shipping = new Shipping
+                //{
+                //    Address = address,
+                //    Cost = 10.00m,
+                //    ShippingType = ShippingType.Pac
+                //},
+                //ExtraAmount = 10.00m,
+                Reference = ActiveCart.Id.ToString(),
+                RedirectUri = new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/PurchaseHistory/Details/" + ActiveCart.Id),
                 MaxAge = 172800, // 2 dias
                 NotificationURL = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/Api/Cart/ReceiveNotification"
             };
 
-            paymentRequest.Items.Add(
-                new Item("0001", "Notebook", 1, 2000.00m)
-            );
+            foreach (var cartProduct in ActiveCart.Products)
+            {
+                paymentRequest.Items.Add(
+                    new Item(cartProduct.ProductId.ToString(), cartProduct.Product.Name, cartProduct.Quantity, (decimal)cartProduct.Product.Price)
+                );
+            }
 
             var paymentRedirectUri = paymentRequest.Register(_credentials);
 
 
             // Update Cart/Products & Generate New Cart
-            var transactionSearchResult = TransactionSearchService.SearchByReference(_credentials, paymentRequest.Reference);
-            foreach (var transactionSummary in transactionSearchResult.Transactions)
+            foreach (var cartProduct in ActiveCart.Products)
             {
-                if (transactionSearchResult.Transactions.Count == 1)
-                {
-                    var transaction = TransactionSearchService.SearchByCode(_credentials, transactionSummary.Code);
-
-                    foreach (var cartProduct in ActiveCart.Products)
-                    {
-                        cartProduct.Product.NumberInStock -= cartProduct.Quantity;
-                    }
-
-                    ActiveCart.PurchaseDate = transaction.Date;
-                    ActiveCart.TransactionCode = transaction.Code;
-                    ActiveCart.IsActive = false;
-                    _context.Users
-                        .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
-                        .Single(u => u.Id == _userId)
-                        .Carts.Add(new Cart
-                        {
-                            IsActive = true
-                        });
-
-                    _context.SaveChanges();
-                }
+                cartProduct.Product.NumberInStock -= cartProduct.Quantity;
             }
+
+            ActiveCart.PurchaseDate = DateTime.Now;
+            ActiveCart.IsActive = false;
+            _context.Users
+                .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                .Single(u => u.Id == _userId)
+                .Carts.Add(new Cart
+                {
+                    IsActive = true
+                });
+
+            _context.SaveChanges();
+
 
             return Ok(paymentRedirectUri);
         }
@@ -261,13 +267,15 @@ namespace Júpiter_Store.Controllers.Api
                     notificationCode
                 );
 
+                var cart = _context.Users
+                    .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
+                    .Single(u => u.Id == _userId)
+                    .Carts.Single(c => c.Id == Int32.Parse(transaction.Reference));
+
+                cart.TransactionCode = transaction.Code;
+
                 if (transaction.TransactionStatus == TransactionStatus.Refunded || transaction.TransactionStatus == TransactionStatus.Cancelled)
                 {
-                    var cart = _context.Users
-                        .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
-                        .Single(u => u.Id == _userId)
-                        .Carts.Single(c => c.TransactionCode == transaction.Code);
-
                     // Return products to stock
                     foreach (var cartProduct in cart.Products)
                     {

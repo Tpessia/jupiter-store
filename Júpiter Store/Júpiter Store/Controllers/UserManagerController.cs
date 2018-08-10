@@ -41,8 +41,6 @@ namespace Júpiter_Store.Controllers
             _context.Dispose();
         }
 
-         
-
 
 
         // GET: UserManager
