@@ -1,16 +1,21 @@
-﻿@model Júpiter_Store.ViewModels.CartViewModel
+﻿@using Júpiter_Store.Extensions
+@using Júpiter_Store.Extensions.PagSeguro
+@model Júpiter_Store.ViewModels.PurchaseHistoryViewModel
 
 @{
     ViewBag.Title = "Detalhes da Compra";
 }
 
-<h2>@ViewBag.Title - @Model.Id (@Model.PurchaseDate.Value.ToString("g"))</h2>
+<h2 class="mb-3">
+    @ViewBag.Title - @Model.Cart.Id
+    <small style="display: block;">@Model.Cart.PurchaseDate.Value.ToString("g")</small>
+</h2>
 
 <div id="purchase-details" class="row">
     <div class="col-12">
         <ul id="product-list" class="list-group list-group-flush">
             @{
-                foreach (var product in Model.Products)
+                foreach (var product in Model.Cart.Products)
                 {
                     <li class="purchased-item list-group-item d-flex justify-content-between align-items-center">
                         <span class="product-image"><img src="@Url.Content(product.ImagePath)"/></span>
@@ -23,16 +28,34 @@
         </ul>
     </div>
     <div class="col-12 my-3 text-right">
-        Total: @Model.GetFinalPrice()
+        Total: @Model.Cart.GetFinalPrice()
     </div>
-    <div class="col-12 my-3">
-        @if (Model.TransactionCode == null)
-        {
-            <a href="@Model.CheckoutUrl"><small>Reenviar pedido.</small></a>
-        }
-        else
-        {
-            <small>Código da transação: @Model.TransactionCode</small>
-        }
-    </div>
+</div>
+
+<hr />
+
+<div id="transaction-details" class="row my-4">
+    @if (Model.Transaction != null)
+    {
+        <div class="col-12">
+            <p>
+                Código PagSeguro: @Model.Transaction.Code
+            </p>
+            <p>
+                Status: @Model.Transaction.GetTransactionStatusText()
+            </p>
+            <p class="mb-0">
+                @{ var address = @Model.Transaction.Shipping.Address; }
+                Endereço de Envio: @address.Country @address.City, @(address.City). @address.Street, @address.Number @address.Complement
+                <br/>
+                Frete: @Model.Transaction.Shipping.Cost
+                <br/>
+                Tipo de Envio: @Model.Transaction.Shipping.GetShippingTypeName()
+            </p>
+        </div>
+    }
+    else
+    {
+        <a href="@Model.Cart.CheckoutUrl"><small>Reenviar pedido.</small></a>
+    }
 </div>

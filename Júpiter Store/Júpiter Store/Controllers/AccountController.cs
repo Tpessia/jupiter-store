@@ -163,7 +163,8 @@ namespace Júpiter_Store.Controllers
                     {
                         new Cart()
                         {
-                            IsActive = true
+                            IsActive = true,
+                            CreationDate = DateTime.Now
                         }
                     }
                 };

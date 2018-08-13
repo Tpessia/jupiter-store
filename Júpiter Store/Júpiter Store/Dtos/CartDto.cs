@@ -12,6 +12,7 @@ namespace Júpiter_Store.Dtos
         public List<ProductDto> Products { get; set; }
         public bool IsActive { get; set; }
         public DateTime? PurchaseDate { get; set; }
+
         public double FinalPrice
         {
             get
@@ -26,7 +27,6 @@ namespace Júpiter_Store.Dtos
                 return finalPrice;
             }
         }
-
 
         public CartDto(Cart cart)
         {

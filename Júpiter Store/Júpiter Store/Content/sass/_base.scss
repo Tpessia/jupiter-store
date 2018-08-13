@@ -54,4 +54,8 @@ body {
             color: lighten($color-second, 10%);
         }
     }
+
+    hr {
+        border-top: 1px solid #2A2C2B !important;
+    }
 }

@@ -8,6 +8,7 @@ using Júpiter_Store.Models;
 using Júpiter_Store.ViewModels;
 using Microsoft.AspNet.Identity;
 using Uol.PagSeguro.Domain;
+using Uol.PagSeguro.Exception;
 using Uol.PagSeguro.Resources;
 using Uol.PagSeguro.Service;
 
@@ -56,11 +57,12 @@ namespace Júpiter_Store.Controllers
             if (cart == null)
                 return HttpNotFound();
 
+            var credentials = PagSeguroConfiguration.Credentials();
             if (cart.TransactionCode == null)
             {
                 var transactionResult = TransactionSearchService.SearchByReference(
-                    PagSeguroConfiguration.Credentials(),
-                    cart.Id.ToString()
+                    credentials,
+                    cart.ReferenceCode
                 );
 
                 foreach (var transactionSummary in transactionResult.Transactions)
@@ -74,7 +76,9 @@ namespace Júpiter_Store.Controllers
                 _context.SaveChanges();
             }
 
-            return View(new CartViewModel(cart));
+            var transaction = cart.TransactionCode != null ? TransactionSearchService.SearchByCode(credentials, cart.TransactionCode) : null;
+
+            return View(new PurchaseHistoryViewModel(cart, transaction));
         }
     }
 }

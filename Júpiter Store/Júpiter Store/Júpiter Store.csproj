@@ -20,7 +20,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44385</IISExpressSSLPort>
+    <IISExpressSSLPort>44332</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -260,8 +260,11 @@
     <Compile Include="Controllers\UserManagerController.cs" />
     <Compile Include="Dtos\CartAndProductDataDto.cs" />
     <Compile Include="Dtos\CartDto.cs" />
+    <Compile Include="Dtos\CepResponse.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
     <Compile Include="Extensions\IdentityExtensions.cs" />
+    <Compile Include="Extensions\PagSeguro\ShippingExtensions.cs" />
+    <Compile Include="Extensions\PagSeguro\TransactionExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -309,9 +312,18 @@
     <Compile Include="Migrations\201808130032085_AddCheckoutUriToCart.Designer.cs">
       <DependentUpon>201808130032085_AddCheckoutUriToCart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808131704556_AddCreationDateOnCart.cs" />
+    <Compile Include="Migrations\201808131704556_AddCreationDateOnCart.Designer.cs">
+      <DependentUpon>201808131704556_AddCreationDateOnCart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808131948300_AddShippingToCart.cs" />
+    <Compile Include="Migrations\201808131948300_AddShippingToCart.Designer.cs">
+      <DependentUpon>201808131948300_AddShippingToCart.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\CartShipping.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Product.cs" />
@@ -321,6 +333,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\CartViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
+    <Compile Include="ViewModels\PurchaseHistoryViewModel.cs" />
     <Compile Include="ViewModels\RoleViewModel.cs" />
     <Compile Include="ViewModels\UserManagerViewModel.cs" />
   </ItemGroup>
@@ -508,6 +521,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808130032085_AddCheckoutUriToCart.resx">
       <DependentUpon>201808130032085_AddCheckoutUriToCart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131704556_AddCreationDateOnCart.resx">
+      <DependentUpon>201808131704556_AddCreationDateOnCart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808131948300_AddShippingToCart.resx">
+      <DependentUpon>201808131948300_AddShippingToCart.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

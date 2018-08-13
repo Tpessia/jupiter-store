@@ -14,6 +14,7 @@ using Júpiter_Store.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 using Uol.PagSeguro.Constants;
 using Uol.PagSeguro.Domain;
 using Uol.PagSeguro.Resources;
@@ -219,7 +220,7 @@ namespace Júpiter_Store.Controllers.Api
                 //    ShippingType = ShippingType.Pac
                 //},
                 //ExtraAmount = 10.00m,
-                Reference = ActiveCart.Id.ToString(),
+                Reference = ActiveCart.ReferenceCode,
                 RedirectUri = new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/PurchaseHistory/Details/" + ActiveCart.Id),
                 MaxAge = 172800, // 2 dias
                 NotificationURL = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/Api/Cart/ReceiveNotification"
@@ -249,13 +250,50 @@ namespace Júpiter_Store.Controllers.Api
                 .Single(u => u.Id == _userId)
                 .Carts.Add(new Cart
                 {
-                    IsActive = true
+                    IsActive = true,
+                    CreationDate = DateTime.Now
                 });
 
             _context.SaveChanges();
 
 
             return Ok(paymentRedirectUri);
+        }
+
+        [HttpPost]
+        [Route("Api/Cart/SetAddress")]
+        public IHttpActionResult SetAddress(string cep, int numero, string complemento)
+        {
+            var regex = new Regex(@"^\d{5}-?\d{3}$");
+
+            if (regex.IsMatch(cep))
+            {
+                cep = cep.Replace("-", "");
+                
+                using (WebClient wc = new WebClient())
+                {
+                    var json = wc.DownloadString("https://api.postmon.com.br/v1/cep/" + cep);
+                    var result = JsonConvert.DeserializeObject<CepResponse>(json);
+
+                    var address = new Address
+                    {
+                        Country = "BRA",
+                        State = result.estado,
+                        City = result.cidade,
+                        District = result.bairro,
+                        Street = result.logradouro,
+                        Number = numero.ToString(),
+                        Complement = complemento,
+                        PostalCode = cep
+                    };
+
+                    return Ok(address);
+                }
+            }
+            else
+            {
+                return BadRequest("Invalid CEP.");
+            }
         }
 
         // POST: Api/Cart/Notification

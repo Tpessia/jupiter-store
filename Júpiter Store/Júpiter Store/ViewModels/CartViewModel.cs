@@ -11,9 +11,11 @@ namespace Júpiter_Store.ViewModels
         public int Id { get; set; }
         public List<ProductViewModel> Products { get; set; }
         public bool IsActive { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime? PurchaseDate { get; set; }
         public string CheckoutUrl { get; set; }
         public string TransactionCode { get; set; }
+
         public double FinalPrice
         {
             get
@@ -28,13 +30,17 @@ namespace Júpiter_Store.ViewModels
                 return finalPrice;
             }
         }
-
+        public string ReferenceCode
+        {
+            get { return $"{Id}_{CreationDate.ToString("yyyyMMddHHmmss")}"; }
+        }
 
         public CartViewModel(Cart cart)
         {
             Id = cart.Id;
             Products = new List<ProductViewModel>();
             IsActive = cart.IsActive;
+            CreationDate = cart.CreationDate;
             PurchaseDate = cart.PurchaseDate;
             CheckoutUrl = cart.CheckoutUrl;
             TransactionCode = cart.TransactionCode;
@@ -44,7 +50,6 @@ namespace Júpiter_Store.ViewModels
                 Products.Add(new ProductViewModel(productCart));
             }
         }
-
 
         public string GetFinalPrice()
         {
