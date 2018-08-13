@@ -20,7 +20,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44332</IISExpressSSLPort>
+    <IISExpressSSLPort>44385</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -261,6 +261,7 @@
     <Compile Include="Dtos\CartAndProductDataDto.cs" />
     <Compile Include="Dtos\CartDto.cs" />
     <Compile Include="Dtos\ProductDto.cs" />
+    <Compile Include="Extensions\IdentityExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -292,13 +293,21 @@
     <Compile Include="Migrations\201808021157189_ChangeProductImagesLocation.Designer.cs">
       <DependentUpon>201808021157189_ChangeProductImagesLocation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808021226300_SeedUsers.cs" />
-    <Compile Include="Migrations\201808021226300_SeedUsers.Designer.cs">
-      <DependentUpon>201808021226300_SeedUsers.cs</DependentUpon>
+    <Compile Include="Migrations\201808110301081_AddTransactionCodeToCart.cs" />
+    <Compile Include="Migrations\201808110301081_AddTransactionCodeToCart.Designer.cs">
+      <DependentUpon>201808110301081_AddTransactionCodeToCart.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201808092003478_AddTransactionCodeToCart.cs" />
-    <Compile Include="Migrations\201808092003478_AddTransactionCodeToCart.Designer.cs">
-      <DependentUpon>201808092003478_AddTransactionCodeToCart.cs</DependentUpon>
+    <Compile Include="Migrations\201808122231078_AddLastAndFirstNameToUser.cs" />
+    <Compile Include="Migrations\201808122231078_AddLastAndFirstNameToUser.Designer.cs">
+      <DependentUpon>201808122231078_AddLastAndFirstNameToUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808122333155_SeedUsers.cs" />
+    <Compile Include="Migrations\201808122333155_SeedUsers.Designer.cs">
+      <DependentUpon>201808122333155_SeedUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201808130032085_AddCheckoutUriToCart.cs" />
+    <Compile Include="Migrations\201808130032085_AddCheckoutUriToCart.Designer.cs">
+      <DependentUpon>201808130032085_AddCheckoutUriToCart.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -488,11 +497,17 @@
     <EmbeddedResource Include="Migrations\201808021157189_ChangeProductImagesLocation.resx">
       <DependentUpon>201808021157189_ChangeProductImagesLocation.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808021226300_SeedUsers.resx">
-      <DependentUpon>201808021226300_SeedUsers.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808110301081_AddTransactionCodeToCart.resx">
+      <DependentUpon>201808110301081_AddTransactionCodeToCart.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201808092003478_AddTransactionCodeToCart.resx">
-      <DependentUpon>201808092003478_AddTransactionCodeToCart.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201808122231078_AddLastAndFirstNameToUser.resx">
+      <DependentUpon>201808122231078_AddLastAndFirstNameToUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808122333155_SeedUsers.resx">
+      <DependentUpon>201808122333155_SeedUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808130032085_AddCheckoutUriToCart.resx">
+      <DependentUpon>201808130032085_AddCheckoutUriToCart.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

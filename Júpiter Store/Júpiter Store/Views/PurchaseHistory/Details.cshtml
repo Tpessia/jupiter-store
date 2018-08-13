@@ -25,4 +25,14 @@
     <div class="col-12 my-3 text-right">
         Total: @Model.GetFinalPrice()
     </div>
+    <div class="col-12 my-3">
+        @if (Model.TransactionCode == null)
+        {
+            <a href="@Model.CheckoutUrl"><small>Reenviar pedido.</small></a>
+        }
+        else
+        {
+            <small>Código da transação: @Model.TransactionCode</small>
+        }
+    </div>
 </div>

@@ -13,7 +13,7 @@ using Microsoft.Owin.Security;
 
 namespace Júpiter_Store.Controllers
 {
-    [Authorize(Roles = RoleName.Admin)]
+    //[Authorize(Roles = RoleName.Admin)]
     public class UserManagerController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -52,7 +52,7 @@ namespace Júpiter_Store.Controllers
                 {
                     Id = u.Id,
                     Email = u.Email,
-                    UserRoles = GetRolesListByUserId(u.Id),
+                    UserRoles = GetRolesByUserId(u.Id)
 
                 });
 
@@ -73,7 +73,7 @@ namespace Júpiter_Store.Controllers
             {
                 Id = user.Id,
                 Email = user.Email,
-                UserRoleIds = GetRolesListByUserId(user.Id).Select(r => r.Id).ToList(),
+                UserRoleIds = GetRolesByUserId(user.Id).Select(r => r.Id).ToList(),
                 Roles = _roles
             };
 
@@ -82,7 +82,6 @@ namespace Júpiter_Store.Controllers
 
         // POST: UserManager/Save
         [HttpPost]
-        [Authorize(Roles = RoleName.Admin)]
         [ValidateAntiForgeryToken]
         public ActionResult Save(UserManagerViewModel newUserData)
         {
@@ -129,7 +128,7 @@ namespace Júpiter_Store.Controllers
 
         // Helpers
 
-        private List<RoleViewModel> GetRolesListByUserId(string userId)
+        private List<RoleViewModel> GetRolesByUserId(string userId)
         {
             return _userManager.GetRoles(userId)
                 .Select(r => new RoleViewModel

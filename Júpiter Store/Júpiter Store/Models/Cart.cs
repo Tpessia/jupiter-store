@@ -13,6 +13,7 @@ namespace Júpiter_Store.Models
         public ICollection<ProductCart> Products { get; set; }
         public bool IsActive { get; set; }
         public DateTime? PurchaseDate { get; set; }
+        public string CheckoutUrl { get; set; }
         public string TransactionCode { get; set; }
         public double FinalPrice
         {

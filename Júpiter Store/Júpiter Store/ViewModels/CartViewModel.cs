@@ -12,6 +12,8 @@ namespace Júpiter_Store.ViewModels
         public List<ProductViewModel> Products { get; set; }
         public bool IsActive { get; set; }
         public DateTime? PurchaseDate { get; set; }
+        public string CheckoutUrl { get; set; }
+        public string TransactionCode { get; set; }
         public double FinalPrice
         {
             get
@@ -34,6 +36,8 @@ namespace Júpiter_Store.ViewModels
             Products = new List<ProductViewModel>();
             IsActive = cart.IsActive;
             PurchaseDate = cart.PurchaseDate;
+            CheckoutUrl = cart.CheckoutUrl;
+            TransactionCode = cart.TransactionCode;
 
             foreach (var productCart in cart.Products)
             {

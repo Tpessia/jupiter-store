@@ -114,18 +114,19 @@ namespace Júpiter_Store.Controllers
             if (product == null)
                 return HttpNotFound();
 
+
             if (product.CartsBelonging.Any())
                 throw new HttpResponseException(HttpStatusCode.Conflict);
+
 
             if (System.IO.File.Exists(Server.MapPath(product.ImagePath)))
             {
                 var path = Server.MapPath(product.ImagePath);
-
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-
                 System.IO.File.Delete(path);
             }
+
+            _context.Products.Remove(product);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }

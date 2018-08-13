@@ -205,9 +205,12 @@ namespace Júpiter_Store.Controllers.Api
             var paymentRequest = new PaymentRequest
             {
                 Currency = Currency.Brl,
-                Sender = new Sender(user.UserName, "c41254692078685555836@sandbox.pagseguro.com.br", new Phone(
-                    Regex.Match(user.PhoneNumber, @"^\((.*?)\)").Value.Trim('(', ')'),
-                    user.PhoneNumber.Substring(user.PhoneNumber.IndexOf(')') + 1)
+                Sender = new Sender(
+                    $"{user.FirstName} {user.LastName}",
+                    "c41254692078685555836@sandbox.pagseguro.com.br",
+                    new Phone(
+                        Regex.Match(user.PhoneNumber, @"^\((.*?)\)").Value.Trim('(', ')'),
+                        user.PhoneNumber.Substring(user.PhoneNumber.IndexOf(')') + 1)
                     )),
                 //Shipping = new Shipping
                 //{
@@ -239,6 +242,7 @@ namespace Júpiter_Store.Controllers.Api
             }
 
             ActiveCart.PurchaseDate = DateTime.Now;
+            ActiveCart.CheckoutUrl = paymentRedirectUri.OriginalString;
             ActiveCart.IsActive = false;
             _context.Users
                 .Include(u => u.Carts.Select(c => c.Products.Select(p => p.Product)))
