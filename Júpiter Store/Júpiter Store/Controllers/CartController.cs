@@ -43,5 +43,16 @@ namespace Júpiter_Store.Controllers
         {
             return View(new CartViewModel(ActiveCart));
         }
+
+        // GET: Cart/CheckOut
+        public ActionResult Checkout()
+        {
+            if (!ActiveCart.Products.Any())
+            {
+                return HttpNotFound();
+            }
+
+            return View(new CheckoutViewModel(ActiveCart));
+        }
     }
 }

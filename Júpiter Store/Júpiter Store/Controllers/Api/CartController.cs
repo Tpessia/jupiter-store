@@ -174,8 +174,11 @@ namespace Júpiter_Store.Controllers.Api
         // POST: Api/Cart/Checkout
         [HttpPost]
         [Route("Api/Cart/Checkout")]
-        public IHttpActionResult Checkout()
+        public IHttpActionResult Checkout(AddressDto addressDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest("Dados inválidos!");
+
             // Check for empty cart
             if (!ActiveCart.Products.Any())
                 return NotFound();
@@ -190,17 +193,10 @@ namespace Júpiter_Store.Controllers.Api
 
 
             // PagSeguro Logic
-            //var address = new Address
-            //{
-            //    Country = "BRA",
-            //    State = "SP",
-            //    City = "São Paulo",
-            //    District = "Jardim Paulistano",
-            //    PostalCode = "01452002",
-            //    Street = "Av. Brig. Faria Lima",
-            //    Number = "1384",
-            //    Complement = "5o. Andar"
-            //};
+            var address = GetAddress(addressDto);
+
+            if (address == null)
+                return BadRequest("CEP inválido!");
 
             var user = _userManager.FindById(_userId);
             var paymentRequest = new PaymentRequest
@@ -213,12 +209,12 @@ namespace Júpiter_Store.Controllers.Api
                         Regex.Match(user.PhoneNumber, @"^\((.*?)\)").Value.Trim('(', ')'),
                         user.PhoneNumber.Substring(user.PhoneNumber.IndexOf(')') + 1)
                     )),
-                //Shipping = new Shipping
-                //{
-                //    Address = address,
-                //    Cost = 10.00m,
-                //    ShippingType = ShippingType.Pac
-                //},
+                Shipping = new Shipping
+                {
+                    Address = address,
+                    Cost = 10.00m,
+                    ShippingType = ShippingType.Pac
+                },
                 //ExtraAmount = 10.00m,
                 Reference = ActiveCart.ReferenceCode,
                 RedirectUri = new Uri(HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + "/PurchaseHistory/Details/" + ActiveCart.Id),
@@ -259,40 +255,36 @@ namespace Júpiter_Store.Controllers.Api
 
             return Ok(paymentRedirectUri);
         }
-
-        [HttpPost]
-        [Route("Api/Cart/SetAddress")]
-        public IHttpActionResult SetAddress(string cep, int numero, string complemento)
+        
+        public Address GetAddress(AddressDto addressDto)
         {
             var regex = new Regex(@"^\d{5}-?\d{3}$");
 
-            if (regex.IsMatch(cep))
+            if (!regex.IsMatch(addressDto.PostalCode))
             {
-                cep = cep.Replace("-", "");
-                
-                using (WebClient wc = new WebClient())
-                {
-                    var json = wc.DownloadString("https://api.postmon.com.br/v1/cep/" + cep);
-                    var result = JsonConvert.DeserializeObject<CepResponse>(json);
-
-                    var address = new Address
-                    {
-                        Country = "BRA",
-                        State = result.estado,
-                        City = result.cidade,
-                        District = result.bairro,
-                        Street = result.logradouro,
-                        Number = numero.ToString(),
-                        Complement = complemento,
-                        PostalCode = cep
-                    };
-
-                    return Ok(address);
-                }
+                return null;
             }
-            else
+
+            addressDto.PostalCode = addressDto.PostalCode.Replace("-", "");
+
+            using (WebClient wc = new WebClient { Encoding = Encoding.UTF8 })
             {
-                return BadRequest("Invalid CEP.");
+                var json = wc.DownloadString("https://api.postmon.com.br/v1/cep/" + addressDto.PostalCode);
+                var result = JsonConvert.DeserializeObject<CepResponse>(json);
+
+                var address = new Address
+                {
+                    Country = "BRA",
+                    State = result.estado,
+                    City = result.cidade,
+                    District = result.bairro,
+                    Street = result.logradouro,
+                    Number = addressDto.Number.ToString(),
+                    Complement = addressDto.Complement,
+                    PostalCode = addressDto.PostalCode
+                };
+
+                return address;
             }
         }
 
